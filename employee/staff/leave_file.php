@@ -217,11 +217,9 @@ $conn->close();
                                     <h4 class="card-title">Leave Information</h4>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="p-3">
-                                                <h5>Overall Available Leave</h5>
-                                                <p class="fs-4 text-success"><?php echo htmlspecialchars($employeeInfo['available_leaves']); ?> days</p>
-                                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#leaveDetailsModal">View leave details</button>
-                                            </div>
+                                            <h5>Overall Available Leave</h5>
+                                            <p class="fs-4 text-success"><?php echo htmlspecialchars($employeeInfo['available_leaves']); ?> days</p>
+                                            <a class="btn btn-success" href="../../employee/staff/leave_details.php"> View leave details</a>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="p-3">
@@ -292,11 +290,11 @@ $conn->close();
                     </form>
                 </div>
             </main>
-            <!-- Leave Details Modal -->
-            <div class="modal fade" id="leaveDetailsModal" tabindex="-1" aria-labelledby="leaveDetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content bg-dark text-light">
-                        <div class="modal-header">
+            <!-- ...existing code... -->
+        </div>
+    </div>
+    <script>
+        //CALENDAR 
                             <h5 class="modal-title" id="leaveDetailsModalLabel">Leave Details</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
