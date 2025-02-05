@@ -18,10 +18,19 @@ $stmt->execute();
 $result = $stmt->get_result();
 $adminInfo = $result->fetch_assoc();
 
+function calculateProgressCircle($averageScore) {
+    return ($averageScore / 10) * 100;
+}
+
 function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) {
     // SQL query to fetch the highest average score for each employee
-    $sql = "SELECT e.e_id, e.firstname, e.lastname, e.department, e.pfp, 
-                   AVG(ae.$criterion) AS avg_score
+    $sql = "SELECT e.e_id, e.firstname, e.lastname, e.department, e.pfp, e.email, 
+                   AVG(ae.$criterion) AS avg_score,
+                   AVG(ae.quality) AS avg_quality,
+                   AVG(ae.communication_skills) AS avg_communication,
+                   AVG(ae.teamwork) AS avg_teamwork,
+                   AVG(ae.punctuality) AS avg_punctuality,
+                   AVG(ae.initiative) AS avg_initiative
             FROM employee_register e
             JOIN admin_evaluations ae ON e.e_id = ae.e_id
             GROUP BY e.e_id
@@ -46,38 +55,113 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
             if (file_exists($row['pfp']) && !empty($row['pfp'])) {
                 $pfp = base64_encode(file_get_contents($row['pfp']));
             } else {
-                $pfp = $defaultPfp; // Use default profile picture
+                $pfp = $defaultPfp;
             }
 
-            echo "<div class='card mb-3' style='max-width: 100%; margin-top: 20px; border: 2px solid #ddd; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 20px; background-color: #f9f9f9;'>"; // Style for certificate look
-            echo "<div class='row no-gutters' style='height: 100%;'>";
-            echo "<div class='col-md-4' style='height: 100%;'>";
-            if (!empty($pfp) && $pfp != 'default_profile_image_base64_data_here') { 
-                // Apply the border only if it's not the default profile picture
-                echo "<img src='data:image/jpeg;base64,$pfp' class='card-img' alt='Profile Picture' style='width: 200px; height: 200px; object-fit: cover; border-radius: 100px; border: 2px solid black;'>";
-            } else {
-                // For default profile picture, no border
-                echo "<img src='data:image/jpeg;base64,$pfp' class='card-img' alt='Profile Picture' style='width: 150px; height: 150px; object-fit: cover; border-radius: 15px;'>";
+            // Calculate percentage for the progress circle
+            $scorePercentage = calculateProgressCircle($row['avg_score']);
+            
+            echo "<div class='employee-card'>";
+            echo "<div class='metrics-container'>";
+            
+            // Left metrics
+            echo "<div class='metrics-column'>";
+            echo "<div class='metric-box fade-in'>";
+            echo "<span class='metric-label'>Quality of Work</span>";
+            echo "<span class='metric-value'>" . round($row['avg_quality'], 2) . "</span>";
+            echo "</div>";
+            
+            echo "<div class='metric-box fade-in' style='animation-delay: 0.2s;'>";
+            echo "<span class='metric-label'>Communication Skills</span>";
+            echo "<span class='metric-value'>" . round($row['avg_communication'], 2) . "</span>";
+            echo "</div>";
+            echo "</div>";
+
+            // Center profile section
+            echo "<div class='profile-section'>";
+            echo "<div class='progress-circle-container'>";
+            echo "<div class='progress-circle' data-progress='" . $scorePercentage . "'>";
+            echo "<div class='profile-image-container'>";
+            if (!empty($pfp)) {
+                echo "<img src='data:image/jpeg;base64,$pfp' alt='Profile Picture' class='profile-image'>";
             }
-            echo "</div>";            
-            echo "<div class='col-md-8' style='height: 100%; display: flex; flex-direction: column; justify-content: center; padding-left: 20px;'>";
-            echo "<div class='card-body' style='height: 100%;'>";
-            echo "<h1 class='card-title' style='font-size: 40px; font-weight: bold; color: #333;'>" . htmlspecialchars($row['firstname'] . ' ' . $row['lastname']) . "</h1>";
-            echo "<p class='card-text fs-5 text-dark'><strong>Department:</strong> " . htmlspecialchars($row['department']) . "</p>";
-            echo "<p class='card-text fs-5 text-dark'><strong>$criterionLabel Score:</strong> " . number_format($row['avg_score'], 2) . "</p>";  // Display average score
-            echo "<p class='card-text fs-5 text-dark'><strong>Employee ID:</strong> " . htmlspecialchars($row['e_id']) . "</p>";
-            echo "</div>"; // End of card-body
-            echo "</div>"; // End of col-md-8
-            echo "</div>"; // End of row
-            echo "</div>"; // End of card
+            echo "</div>";
+            echo "</div>";
+            echo "</div>";
+            
+            echo "<div class='profile-info'>";
+            echo "<h2 class='admin-name'>" . htmlspecialchars($row['firstname'] . ' ' . $row['lastname']) . "</h2>";
+            echo "<p class='department-name'>" . htmlspecialchars($row['department']) . "</p>";
+            echo "</div>";
+            echo "<div class='admin-id fade-in' style='animation-delay: 0.8s;'>";
+            echo "Employee ID: " . htmlspecialchars($row['e_id']);
+            echo "</div>";
+
+            // New metric box below admin ID
+            echo "<div class='metric-box fade-in' style='animation-delay: 0.8s;'>";
+            echo "<span class='metric-label'>Initiative</span>";
+            echo "<span class='metric-value'>" . round($row['avg_initiative'], 2) . "</span>";
+            echo "</div>";
+
+            // Add buttons for comments and reactions
+            echo "<div class='comment-reaction-buttons'>";
+            echo "  <div class='reactions text-start mt-4'>";
+            echo "      <div class='reaction-button'>";
+            echo "          <button class='btn btn-outline-primary' title='Like' onmouseover=\"showPopup('👍', 'like-popup')\" onmouseout=\"hidePopup('like-popup')\" onclick=\"react('like')\">";
+            echo "              👍 <span id='like-count'>2</span>";
+            echo "          </button>";
+            echo "          <span class='popup-emoji' id='like-popup'>👍</span>";
+            echo "      </div>";
+            echo "      <div class='reaction-button'>";
+            echo "          <button class='btn btn-outline-primary' title='Love' onmouseover=\"showPopup('❤️', 'love-popup')\" onmouseout=\"hidePopup('love-popup')\" onclick=\"react('love')\">";
+            echo "              ❤️ <span id='love-count'>3</span>";
+            echo "          </button>";
+            echo "          <span class='popup-emoji' id='love-popup'>❤️</span>";
+            echo "      </div>";
+            echo "      <div class='reaction-button'>";
+            echo "          <button class='btn btn-outline-primary' title='Wow' onmouseover=\"showPopup('😮', 'wow-popup')\" onmouseout=\"hidePopup('wow-popup')\" onclick=\"react('wow')\">";
+            echo "              😮 <span id='wow-count'>1</span>";
+            echo "          </button>";
+            echo "          <span class='popup-emoji' id='wow-popup'>😮</span>";
+            echo "      </div>";
+            echo "      <div class='reaction-button'>";
+            echo "          <button class='btn btn-outline-primary' title='Awesome' onmouseover=\"showPopup('😎', 'awesome-popup')\" onmouseout=\"hidePopup('awesome-popup')\" onclick=\"react('awesome')\">";
+            echo "              😎 <span id='awesome-count'>2</span>";
+            echo "          </button>";
+            echo "          <span class='popup-emoji' id='awesome-popup'>😎</span>";
+            echo "      </div>";
+            echo "  </div>";
+            echo "</div>";
+            echo "<div class='text-center mt-2'>";
+            echo "  <button class='btn btn-primary' onclick='openCommentModal()'>Write a Comment</button>";
+            echo "</div>";
+
+            echo "</div>"; // End profile-section
+
+            // Right metrics
+            echo "<div class='metrics-column'>";
+            echo "<div class='metric-box fade-in' style='animation-delay: 0.4s;'>";
+            echo "<span class='metric-label'>Teamwork</span>";
+            echo "<span class='metric-value'>" . round($row['avg_teamwork'], 2) . "</span>";
+            echo "</div>";
+            
+            echo "<div class='metric-box fade-in' style='animation-delay: 0.6s;'>";
+            echo "<span class='metric-label'>Punctuality</span>";
+            echo "<span class='metric-value'>" . round($row['avg_punctuality'], 2) . "</span>";
+            echo "</div>";
+            echo "</div>";
+
+            echo "</div>"; // End metrics-container
+            echo "</div>"; // End admin-card
         }
     } else {
-        echo "<p class='text-center'>No outstanding employees found for $criterionLabel.</p>";
+        echo "<p class='text-center'>No outstanding admins found for $criterionLabel.</p>";
     }
 
     echo "</div>"; // End of category
     $stmt->close();
 }
+
 
 // Function to get the current reactions from the database
 function getReactions($conn) {
@@ -114,112 +198,13 @@ $reactions = getReactions($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outstanding Employees</title>
+    <title>Outstanding Admins</title>
     <link href="../css/styles.css" rel="stylesheet" />
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <link href="../css/calendar.css" rel="stylesheet"/>
+    <link href="../css/awardee.css" rel="stylesheet"/>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .card {
-            border: 2px solid #ddd; 
-            border-radius: 10px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-            padding: 10px; 
-            background-color: #f9f9f9;
-        }
-        .card-img {
-            border-radius: 10px;
-        }
-        .card-body {
-            padding-left: 10px;
-        }
-        .card-title {
-            font-size: 20px; 
-            font-weight: bold; 
-            color: #333;
-        }
-        .card-text {
-            font-size: 14px;
-        }
-        .category {
-            display: none;
-        }
-        .btn {
-            transition: transform 0.3s, background-color 0.3s; /* Smooth transition */
-            border-radius: 20px;
-            padding: 5px 10px;
-            font-size: 14px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px); /* Raise the button up */
-        }
-        {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f9;
-            flex-direction: column;
-        }
-        .emoji-container {
-            display: none;
-            gap: 15px;
-            cursor: pointer;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        .emoji {
-            font-size: 30px;
-            transition: transform 0.2s ease;
-            padding: 10px;
-        }
-        .emoji:hover {
-            transform: scale(1.2);
-        }
-        .reaction {
-            margin-top: 15px;
-            font-size: 18px;
-            color: #333;
-        }
-        .saved-reaction {
-            margin-top: 10px;
-            color: #007bff;
-        }
-        .open-btn {
-            font-size: 16px;
-            padding: 8px 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .open-btn:hover {
-            background-color: #0056b3;
-        }
-        .reaction-count {
-            font-size: 18px;
-            color: #333;
-            margin-top: 10px;
-            display: flex;
-            gap: 15px;
-        }
-        .reaction-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .selected-emoji {
-            font-size: 50px;
-            margin-top: 20px;
-        }
-</style>
 </head>
 <body class="sb-nav-fixed bg-black">
     <nav class="sb-topnav navbar navbar-expand navbar-dark border-bottom border-1 border-warning bg-dark">
@@ -266,7 +251,7 @@ $reactions = getReactions($conn);
                                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                     <li><hr class="dropdown-divider" /></li>
-                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a></li>
+                                    <li><a class="dropdown-item" href="../admin/logout.php">Logout</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item text-light d-flex ms-3 flex-column align-items-center text-center">
@@ -372,72 +357,23 @@ $reactions = getReactions($conn);
                         </div>
                     </div>
                 </div>   
-                <h1 class="mb-2 text-light ms-2">Outstanding Employees by Evaluation Criteria</h1>            
+                <h1 class="mb-2 text-light ms-2">Outstanding Admins by Evaluation Criteria</h1>            
                 <div class="container text-light">
 
-                    <!-- Top Employees for Different Criteria -->
-                    <?php getTopEmployeesByCriterion($conn, 'quality', 'Quality of Work', 1); ?>
-                    <?php getTopEmployeesByCriterion($conn, 'communication_skills', 'Communication Skills', 2); ?>
-                    <?php getTopEmployeesByCriterion($conn, 'teamwork', 'Teamwork', 3); ?>
-                    <?php getTopEmployeesByCriterion($conn, 'punctuality', 'Punctuality', 4); ?>
-                    <?php getTopEmployeesByCriterion($conn, 'initiative', 'Initiative', 5); ?>
+                <?php getTopEmployeesByCriterion($conn, 'quality', 'Quality of Work', 1); ?>
+                <?php getTopEmployeesByCriterion($conn, 'communication_skills', 'Communication Skills', 2); ?>
+                <?php getTopEmployeesByCriterion($conn, 'teamwork', 'Teamwork', 3); ?>
+                <?php getTopEmployeesByCriterion($conn, 'punctuality', 'Punctuality', 4); ?>
+                <?php getTopEmployeesByCriterion($conn, 'initiative', 'Initiative', 5); ?>
 
                     <!-- Navigation buttons for manually controlling the categories -->
                     <div class="text-center">
                         <button class="btn btn-primary" onclick="showPreviousCategory()">Previous</button>
                         <button class="btn btn-primary" onclick="showNextCategory()">Next</button>
                     </div>
-                    
-    <button class="open-btn" onclick="toggleEmojis()">Open Emoji Reactions</button>
-
-    <div class="emoji-container" id="emojiContainer">
-        <form method="POST" id="reactionForm">
-            <input type="hidden" name="reaction" id="reactionInput">
-            <div class="emoji" onclick="submitReaction('Like')">👍</div>
-            <div class="emoji" onclick="submitReaction('Love')">❤️</div>
-            <div class="emoji" onclick="submitReaction('Haha')">😂</div>
-            <div class="emoji" onclick="submitReaction('Wow')">😲</div>
-            <div class="emoji" onclick="submitReaction('Sad')">😢</div>
-            <div class="emoji" onclick="submitReaction('Angry')">😡</div>
-        </form>
-    </div>
-
-    <div class="reaction" id="reactionText"></div>
-
-    <div class="saved-reaction" id="savedReactionText"></div>
-
-    <div class="selected-emoji" id="selectedEmoji"></div>
-
-    <div class="reaction-count">
-        <?php foreach ($reactions as $reaction => $count): ?>
-            <div class="reaction-item">
-                <span><?php echo htmlspecialchars($reaction); ?></span>
-                <span><?php echo $count; ?></span>
-                <span class="user-reaction" style="display: none;">(You)</span>
-            </div>
-        <?php endforeach; ?>
-    </div>
                 </div>
             </main>
-                <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-warning">
-                                <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Are you sure you want to log out?
-                            </div>
-                            <div class="modal-footer border-top border-warning">
-                                <button type="button" class="btn border-secondary text-light" data-bs-dismiss="modal">Cancel</button>
-                                <form action="../admin/logout.php" method="POST">
-                                    <button type="submit" class="btn btn-danger">Logout</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>  
+            
             <footer class="py-4 bg-dark text-light mt-auto border-top border-warning">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
@@ -634,7 +570,92 @@ $reactions = getReactions($conn);
                 selectedEmoji.innerHTML = getEmoji(savedReaction);
             }
         });
+
+        function openCommentModal() {
+            document.getElementById('commentModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function postComment(event, input) {
+            if (event.key === 'Enter' && input.value.trim() !== '') {
+                let commentList = document.querySelector('.modal-body .comment-list');
+                let newComment = document.createElement('p');
+                newComment.textContent = input.value;
+                newComment.classList.add('comment');
+                commentList.appendChild(newComment);
+
+                input.value = '';
+
+                // Optional: Send comment to the backend using AJAX
+                // fetch('save_comment.php', {
+                //     method: 'POST',
+                //     body: JSON.stringify({ comment: input.value }),
+                //     headers: { 'Content-Type': 'application/json' }
+                // });
+            }
+        }
+
+        // Reaction Popup
+        function showPopup(emoji, popupId) {
+            document.getElementById(popupId).style.opacity = '1';
+        }
+
+        function hidePopup(popupId) {
+            document.getElementById(popupId).style.opacity = '0';
+        }
+
+        // Initialize progress circles
+        document.addEventListener('DOMContentLoaded', function() {
+            const circles = document.querySelectorAll('.progress-circle');
+            circles.forEach(circle => {
+                const progress = circle.getAttribute('data-progress');
+                const circumference = 2 * Math.PI * 90; // for r=90
+                const strokeDashoffset = circumference - (progress / 100) * circumference;
+                
+                // Create SVG circle
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('class', 'progress-ring');
+                svg.setAttribute('width', '200');
+                svg.setAttribute('height', '200');
+                
+                const circleElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circleElement.setAttribute('class', 'progress-ring__circle');
+                circleElement.setAttribute('stroke', '#22d3ee');
+                circleElement.setAttribute('stroke-width', '4');
+                circleElement.setAttribute('fill', 'transparent');
+                circleElement.setAttribute('r', '90');
+                circleElement.setAttribute('cx', '100');
+                circleElement.setAttribute('cy', '100');
+                circleElement.style.strokeDasharray = `${circumference} ${circumference}`;
+                circleElement.style.strokeDashoffset = strokeDashoffset;
+                
+                svg.appendChild(circleElement);
+                circle.insertBefore(svg, circle.firstChild);
+            });
+        });
     </script>
+
+    <!-- Comment Modal -->
+    <div id="commentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('commentModal')">&times;</span>
+            <input type="text" class="comment-input" placeholder="Write your comment..." onkeypress="postComment(event, this)">
+            <div class="modal-body">
+                <div class="comment-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reaction Modal -->
+    <div id="reactionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('reactionModal')">&times;</span>
+            <div class="modal-body"></div>
+        </div>
+    </div>
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

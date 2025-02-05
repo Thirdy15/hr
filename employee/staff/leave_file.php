@@ -20,14 +20,6 @@ if (!$employeeInfo) {
     die("Error: Employee information not found.");
 }
 
-// Fetch leave limits
-//$leaveLimitsQuery = "SELECT leave_type, leave_limit FROM leave_limits";
-//$leaveLimitsResult = $conn->query($leaveLimitsQuery);
-//$leaveLimits = [];
-//while ($row = $leaveLimitsResult->fetch_assoc()) {
-    //$leaveLimits[$row['leave_type']] = $row['leave_limit'];
-//}
-
 // Check if there are any status messages to display
 $status_message = isset($_SESSION['status_message']) ? $_SESSION['status_message'] : '';
 unset($_SESSION['status_message']); // Clear the status message after displaying it
@@ -49,7 +41,6 @@ $stmt->close();
 $usedLeaveStmt->close();
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -115,18 +106,18 @@ $conn->close();
                                 <span class="big text-light mb-1">
                                     <?php
                                         if ($employeeInfo) {
-                                        echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['middlename'] . ' ' . $employeeInfo['lastname']);
+                                            echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['middlename'] . ' ' . $employeeInfo['lastname']);
                                         } else {
-                                        echo "User information not available.";
+                                            echo "User information not available.";
                                         }
                                     ?>
                                 </span>      
                                 <span class="big text-light">
                                     <?php
                                         if ($employeeInfo) {
-                                        echo htmlspecialchars($employeeInfo['role']);
+                                            echo htmlspecialchars($employeeInfo['role']);
                                         } else {
-                                        echo "User information not available.";
+                                            echo "User information not available.";
                                         }
                                     ?>
                                 </span>
@@ -155,8 +146,8 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/supervisor/leave_file.php">File Leave</a>
-                            <a class="nav-link text-light" href="../../employee/supervisor/leave_request.php">Leave Request</a>
+                                <a class="nav-link text-light" href="../../employee/supervisor/leave_file.php">File Leave</a>
+                                <a class="nav-link text-light" href="../../employee/supervisor/leave_request.php">Leave Request</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
@@ -166,7 +157,7 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/supervisor/evaluation.php">Evaluation</a>
+                                <a class="nav-link text-light" href="../../employee/supervisor/evaluation.php">Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -176,9 +167,9 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseSR" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="">Awardee</a>
+                                <a class="nav-link text-light" href="../../employee/staff/awardee.php">Awardee</a>
                             </nav>
-                        </div>
+                             </div>
                         <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
@@ -225,7 +216,7 @@ $conn->close();
                                             <div class="p-3">
                                                 <h5>Used Leave</h5>
                                                 <p class="fs-4 text-danger"><?php echo htmlspecialchars($usedLeave); ?> days</p>
-                                                <a class="btn btn-danger" href="../supervisor/leave_history.php"> View leave history</a>
+                                                <a class="btn btn-danger" href="../staff/leave_history.php"> View leave history</a>
                                             </div>
                                         </div>
                                     </div>
@@ -295,95 +286,55 @@ $conn->close();
     </div>
     <script>
         //CALENDAR 
-                            <h5 class="modal-title" id="leaveDetailsModalLabel">Leave Details</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-dark table-striped">
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Employee ID:</th>
-                                        <td><?php echo htmlspecialchars($employeeInfo['e_id']); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Employee Name:</th>
-                                        <td><?php echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['middlename'] . ' ' . $employeeInfo['lastname']); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Role:</th>
-                                        <td><?php echo htmlspecialchars($employeeInfo['role']); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Available Leaves:</th>
-                                        <td><?php echo htmlspecialchars($employeeInfo['available_leaves']); ?> days</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Used Leaves:</th>
-                                        <td><?php echo htmlspecialchars($usedLeave); ?> days</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ...existing code... -->
-        </div>
-    </div>
-    <script>
-        //CALENDAR 
         let calendar;
-            function toggleCalendar() {
-                const calendarContainer = document.getElementById('calendarContainer');
-                    if (calendarContainer.style.display === 'none' || calendarContainer.style.display === '') {
-                        calendarContainer.style.display = 'block';
-                        if (!calendar) {
-                            initializeCalendar();
-                         }
-                        } else {
-                            calendarContainer.style.display = 'none';
-                        }
+        function toggleCalendar() {
+            const calendarContainer = document.getElementById('calendarContainer');
+            if (calendarContainer.style.display === 'none' || calendarContainer.style.display === '') {
+                calendarContainer.style.display = 'block';
+                if (!calendar) {
+                    initializeCalendar();
+                }
+            } else {
+                calendarContainer.style.display = 'none';
             }
+        }
 
-            function initializeCalendar() {
-                const calendarEl = document.getElementById('calendar');
-                    calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        headerToolbar: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                        },
-                        height: 440,  
-                        events: {
-                        url: '../../db/holiday.php',  
-                        method: 'GET',
-                        failure: function() {
+        function initializeCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                height: 440,  
+                events: {
+                    url: '../../db/holiday.php',  
+                    method: 'GET',
+                    failure: function() {
                         alert('There was an error fetching events!');
-                        }
-                        }
-                    });
+                    }
+                }
+            });
 
-                    calendar.render();
+            calendar.render();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentDateElement = document.getElementById('currentDate');
+            const currentDate = new Date().toLocaleDateString(); 
+            currentDateElement.textContent = currentDate; 
+        });
+
+        document.addEventListener('click', function(event) {
+            const calendarContainer = document.getElementById('calendarContainer');
+            const calendarButton = document.querySelector('button[onclick="toggleCalendar()"]');
+
+            if (!calendarContainer.contains(event.target) && !calendarButton.contains(event.target)) {
+                calendarContainer.style.display = 'none';
             }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                const currentDateElement = document.getElementById('currentDate');
-                const currentDate = new Date().toLocaleDateString(); 
-                currentDateElement.textContent = currentDate; 
-            });
-
-            document.addEventListener('click', function(event) {
-                const calendarContainer = document.getElementById('calendarContainer');
-                const calendarButton = document.querySelector('button[onclick="toggleCalendar()"]');
-
-                    if (!calendarContainer.contains(event.target) && !calendarButton.contains(event.target)) {
-                        calendarContainer.style.display = 'none';
-                        }
-            });
+        });
         //CALENDAR END
 
         //TIME 
@@ -394,12 +345,12 @@ $conn->close();
             const currentDate = new Date();
     
             currentDate.setHours(currentDate.getHours() + 0);
-                const hours = currentDate.getHours();
-                const minutes = currentDate.getMinutes();
-                const seconds = currentDate.getSeconds();
-                const formattedHours = hours < 10 ? '0' + hours : hours;
-                const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-                const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+            const hours = currentDate.getHours();
+            const minutes = currentDate.getMinutes();
+            const seconds = currentDate.getSeconds();
+            const formattedHours = hours < 10 ? '0' + hours : hours;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
 
             currentTimeElement.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
             currentDateElement.textContent = currentDate.toLocaleDateString();
@@ -444,7 +395,7 @@ $conn->close();
             }
         }
         //LEAVE DAYS END
-</script>
+    </script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'> </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="../../js/employee.js"></script>

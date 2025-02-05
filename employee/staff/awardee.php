@@ -22,6 +22,19 @@ function calculateProgressCircle($averageScore) {
     return ($averageScore / 10) * 100;
 }
 
+function renderStars($score) {
+    $fullStars = floor($score);
+    $partialStar = $score - $fullStars;
+    $starsHtml = str_repeat("⭐", $fullStars);
+    if ($partialStar > 0) {
+        $starsHtml .= "<span style='color: gold; position: relative; display: inline-block;'>
+                        ⭐
+                        <span style='color: gray; position: absolute; top: 0; left: 0; width: " . (1 - $partialStar) * 100 . "%; overflow: hidden;'>⭐</span>
+                       </span>";
+    }
+    return $starsHtml;
+}
+
 function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) {
     // SQL query to fetch the highest average score for each employee
     $sql = "SELECT e.e_id, e.firstname, e.lastname, e.department, e.pfp, e.email, 
@@ -30,7 +43,8 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                    AVG(ae.communication_skills) AS avg_communication,
                    AVG(ae.teamwork) AS avg_teamwork,
                    AVG(ae.punctuality) AS avg_punctuality,
-                   AVG(ae.initiative) AS avg_initiative
+                   AVG(ae.initiative) AS avg_initiative,
+                   COUNT(ae.e_id) AS evaluation_count
             FROM employee_register e
             JOIN admin_evaluations ae ON e.e_id = ae.e_id
             GROUP BY e.e_id
@@ -69,11 +83,13 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
             echo "<div class='metric-box fade-in'>";
             echo "<span class='metric-label'>Quality of Work</span>";
             echo "<span class='metric-value'>" . round($row['avg_quality'], 2) . "</span>";
+            echo "<div class='stars'>" . renderStars(round($row['avg_quality'], 2)) . "</div>";
             echo "</div>";
             
             echo "<div class='metric-box fade-in' style='animation-delay: 0.2s;'>";
             echo "<span class='metric-label'>Communication Skills</span>";
             echo "<span class='metric-value'>" . round($row['avg_communication'], 2) . "</span>";
+            echo "<div class='stars'>" . renderStars(round($row['avg_communication'], 2)) . "</div>";
             echo "</div>";
             echo "</div>";
 
@@ -101,6 +117,7 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
             echo "<div class='metric-box fade-in' style='animation-delay: 0.8s;'>";
             echo "<span class='metric-label'>Initiative</span>";
             echo "<span class='metric-value'>" . round($row['avg_initiative'], 2) . "</span>";
+            echo "<div class='stars'>" . renderStars(round($row['avg_initiative'], 2)) . "</div>";
             echo "</div>";
 
             echo "</div>"; // End profile-section
@@ -110,15 +127,18 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
             echo "<div class='metric-box fade-in' style='animation-delay: 0.4s;'>";
             echo "<span class='metric-label'>Teamwork</span>";
             echo "<span class='metric-value'>" . round($row['avg_teamwork'], 2) . "</span>";
+            echo "<div class='stars'>" . renderStars(round($row['avg_teamwork'], 2)) . "</div>";
             echo "</div>";
             
             echo "<div class='metric-box fade-in' style='animation-delay: 0.6s;'>";
             echo "<span class='metric-label'>Punctuality</span>";
             echo "<span class='metric-value'>" . round($row['avg_punctuality'], 2) . "</span>";
+            echo "<div class='stars'>" . renderStars(round($row['avg_punctuality'], 2)) . "</div>";
             echo "</div>";
             echo "</div>";
 
             echo "</div>"; // End metrics-container
+
             echo "</div>"; // End employee-card
         }
     } else {
@@ -172,6 +192,7 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
             border-radius: 20px;
             padding: 5px 10px;
             font-size: 14px;
+            margin: 5px; /* Add margin to ensure buttons don't stick to each other */
         }
 
         .btn:hover {
@@ -179,7 +200,7 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
         }
         
         .emoji-container {
-            display: none;
+            display: flex; /* Always show emojis */
             gap: 15px;
             cursor: pointer;
             margin-top: 15px;
@@ -394,6 +415,241 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
         .progress-ring__circle {
             transition: stroke-dashoffset 0.5s ease-out;
         }
+
+        .comment-reaction-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .modal-right {
+            position: fixed;
+            top: 10%;
+            right: 0;
+            width: 300px;
+            height: 80%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .modal-body {
+            margin-top: 20px;
+            overflow-y: auto;
+            max-height: 70%;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .comment-button {
+            background-color: #1877F2;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .comment-display {
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .reaction-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .like-button {
+            background-color: #1877F2;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .reaction-menu {
+            display: none;
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: white;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            flex-direction: row;
+            gap: 5px;
+        }
+
+        .reaction {
+            cursor: pointer;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .reaction:hover {
+            transform: scale(1.3);
+        }
+
+        .comment-section {
+            margin-top: 10px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: black; /* Change text color to black */
+        }
+
+        .comment-list {
+            margin-top: 5px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .comment {
+            background: transparent;
+            padding: 5px;
+            margin-top: 3px;
+            border-radius: 5px;
+            color: white;
+        }
+        .reaction-dropdown {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        .reaction-dropdown.show {
+            display: block;
+        }
+        .reaction-dropdown button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 5px;
+        }
+        .comment-input-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .comment-input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: black;
+        }
+        .comment-list {
+            margin-top: 5px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .comment {
+            background: transparent;
+            padding: 5px;
+            margin-top: 3px;
+            border-radius: 5px;
+            color: white;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: rgba(51, 51, 51, 0.9);
+            color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .reaction-button {
+            position: relative;
+            display: inline-block;
+            transition: width 0.3s ease;
+            width: 100px; /* Initial width */
+        }
+        .reaction-button:hover {
+            width: 200px; /* Expanded width on hover */
+        }
+        .reaction-button .emoji-container {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            flex-direction: row;
+            gap: 5px;
+        }
+        .reaction-button:hover .emoji-container {
+            display: flex;
+        }
     </style>
 </head>
 <body class="sb-nav-fixed bg-black">
@@ -540,11 +796,27 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                 <?php getTopEmployeesByCriterion($conn, 'punctuality', 'Punctuality', 4); ?>
                 <?php getTopEmployeesByCriterion($conn, 'initiative', 'Initiative', 5); ?>
 
+                <!-- Buttons for comments and reactions -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary me-2" onclick="openCommentModal()">Write a Comment</button>
+                    <!-- Reaction button with default like icon -->
+                    <button class="btn btn-primary reaction-button">
+                        <i class="fas fa-thumbs-up"></i> React
+                        <div class="emoji-container">
+                            <span class="emoji" onclick='selectReaction("👍 Like")'>👍</span>
+                            <span class="emoji" onclick='selectReaction("❤️ Heart")'>❤️</span>
+                            <span class="emoji" onclick='selectReaction("😮 Wow")'>😮</span>
+                        </div>
+                    </button>
+                </div>
+
                 <!-- Navigation buttons for manually controlling the categories -->
                 <div class="text-center">
-                    <button class="btn btn-primary" onclick="showPreviousCategory()">Previous</button>
-                    <button class="btn btn-primary" onclick="showNextCategory()">Next</button>
+                    <button class="btn btn-primary" onclick="showPreviousCategory()"><</button>
+                    <button class="btn btn-primary" onclick="showNextCategory()">></button>
                 </div>
+
+                
             </div>
             </main>
             <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -718,7 +990,59 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                 circle.insertBefore(svg, circle.firstChild);
             });
         });
+
+        function selectReaction(reaction) {
+            const reactionModal = document.getElementById('reactionModal');
+            reactionModal.querySelector('.modal-body').textContent = "You reacted with: " + reaction;
+            reactionModal.style.display = 'block';
+        }
+
+        function postComment(event, input) {
+            if (event.key === 'Enter' && input.value.trim() !== '') {
+                let commentList = document.querySelector('.modal-body .comment-list');
+                let newComment = document.createElement('p');
+                newComment.textContent = input.value;
+                newComment.classList.add('comment');
+                commentList.appendChild(newComment);
+
+                input.value = '';
+
+                // Optional: Send comment to the backend using AJAX
+                // fetch('save_comment.php', {
+                //     method: 'POST',
+                //     body: JSON.stringify({ comment: input.value }),
+                //     headers: { 'Content-Type': 'application/json' }
+                // });
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openCommentModal() {
+            document.getElementById('commentModal').style.display = 'block';
+        }
     </script>
+
+    <!-- Comment Modal -->
+    <div id="commentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('commentModal')">&times;</span>
+            <input type="text" class="comment-input" placeholder="Write your comment..." onkeypress="postComment(event, this)">
+            <div class="modal-body">
+                <div class="comment-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reaction Modal -->
+    <div id="reactionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('reactionModal')">&times;</span>
+            <div class="modal-body"></div>
+        </div>
+    </div>
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

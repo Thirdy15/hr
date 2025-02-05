@@ -40,17 +40,6 @@ if (!isset($_SESSION['e_id'])) {
       z-index: 1000;
     }
 
-    .modal-overlay {
-      display: block; /* Show the overlay initially */
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-    }
-
     h1 {
       text-align: center;
       margin-bottom: 20px;
@@ -133,51 +122,6 @@ if (!isset($_SESSION['e_id'])) {
       width: 100%; /* Make input element fill the cell */
       box-sizing: border-box; /* Ensure padding is considered inside the input */
     }
-
-    .modal {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
-      display: flex; /* Use flexbox for centering */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
-    }
-
-    .modal-content {
-      background-color: #fefefe;
-      padding: 20px;
-      border: 1px solid #888;
-      border-radius: 8px; /* Rounded corners */
-      width: 90%; /* Increased width */
-      max-width: 700px; /* Increased maximum width */
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Add shadow */
-      animation: fadeIn 0.3s; /* Fade-in animation */
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -188,41 +132,11 @@ if (!isset($_SESSION['e_id'])) {
     <h1>Leave Tracker</h1>
     <div class="button-container">
       <button onclick="window.history.back();">Back</button>
-      <button id="openModalBtn">Open Converter</button>
+      <!-- Removed the "Open Converter" button -->
     </div> <!-- Added missing closing div tag for button-container -->
 
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <table>
-          <thead>
-            <tr>
-              <th colspan="2">Convert Your Leave Days to Money</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Enter number of leave days:</td>
-              <td><input type="number" id="leaveDays" required></td>
-            </tr>
-            <tr>
-              <td>Enter your daily rate (in Peso):</td>
-              <td><input type="number" id="dailyRate" required></td>
-            </tr>
-            <tr>
-              <td colspan="2" style="text-align: center;">
-                <button id="calculateBtn">Calculate</button>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" style="text-align: center;">
-                <p id="resultMessage" class="result"></p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- Removed the modal HTML structure -->
+
     <br> <!-- Added space instead of separator -->
     <div class="table-container">
       <table>
@@ -262,34 +176,9 @@ if (!isset($_SESSION['e_id'])) {
     </div>
   </div>
   
-
   <script>
-    // Add the openModal and closeModal functions
-    document.getElementById('openModalBtn').onclick = function() {
-      document.getElementById('myModal').style.display = 'flex'; // Use flex to center
-    };
-
-    document.querySelector('.close').onclick = function() {
-      document.getElementById('myModal').style.display = 'none';
-    };
-
-    window.onclick = function(event) {
-      if (event.target == document.getElementById('myModal')) {
-        document.getElementById('myModal').style.display = 'none';
-      }
-    };
-
-    function calculateRemainingLeaves() {
-      // Get the input values
-      const totalDays = parseInt(document.querySelector('input[value="12"]').value); // Replace with actual logic to fetch the total leave days
-      const usedDays = parseInt(document.querySelector('input[value="3"]').value); // Replace with actual logic to fetch the used leave days
-      
-      // Calculate remaining leaves
-      const remainingLeave = totalDays - usedDays;
-      
-      // Update the display
-      document.getElementById('sickLeaveRemaining').textContent = `Leave Remaining: ${remainingLeave}`;
-    }
+    // Removed the openModal and closeModal functions
+    // Removed the calculateRemainingLeaves function
   </script>
 </body>
 </html>
