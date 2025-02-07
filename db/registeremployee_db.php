@@ -13,6 +13,7 @@ $confirm_password = $_POST['confirm_password'];
 $role = "Employee"; // Static role value as requested
 $department = $_POST['department'];
 $position = $_POST['position'];
+$gender = $_POST['gender']; // New gender field
 
 // Password validation
 if ($password !== $confirm_password) {
@@ -55,10 +56,10 @@ function generateEmployeeId($conn) {
 $employeeId = generateEmployeeId($conn);
 
 // Insert data into the employee_register table with the 8-digit employee ID
-$insert_query = "INSERT INTO employee_register (e_id, firstname, lastname, email, password, role, department, position) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+$insert_query = "INSERT INTO employee_register (e_id, firstname, lastname, email, password, role, department, position, gender) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($insert_query);
-$stmt->bind_param("isssssss", $employeeId, $firstname, $lastname, $email, $hashed_password, $role, $department, $position);
+$stmt->bind_param("issssssss", $employeeId, $firstname, $lastname, $email, $hashed_password, $role, $department, $position, $gender);
 
 if ($stmt->execute()) {
     // Define QR code content (using the employee ID)

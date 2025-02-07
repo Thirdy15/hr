@@ -42,6 +42,7 @@ $usedLeaveStmt->close();
 $conn->close();
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,29 +57,29 @@ $conn->close();
 </head>
 <body class="sb-nav-fixed bg-black">
     <nav class="sb-topnav navbar navbar-expand navbar-dark border-bottom border-1 border-warning bg-dark">
-        <a class="navbar-brand ps-3 text-muted" href="../../employee/supervisor/dashboard.php">Employee Portal</a>
+        <a class="navbar-brand ps-3 text-muted" href="../../employee/staff/dashboard.php">Employee Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
-        <div class="d-flex ms-auto me-0 me-md-3 my-2 my-md-0 align-items-center">
-            <div class="text-light me-3 p-2 rounded shadow-sm bg-gradient" id="currentTimeContainer" 
-                style="background: linear-gradient(45deg, #333333, #444444); border-radius: 5px;">
-                <span class="d-flex align-items-center">
-                    <span class="pe-2">
-                        <i class="fas fa-clock"></i> 
-                        <span id="currentTime">00:00:00</span>
+            <div class="d-flex ms-auto me-0 me-md-3 my-2 my-md-0 align-items-center">
+                <div class="text-light me-3 p-2 rounded shadow-sm bg-gradient" id="currentTimeContainer" 
+                    style="background: linear-gradient(45deg, #333333, #444444); border-radius: 5px;">
+                    <span class="d-flex align-items-center">
+                        <span class="pe-2">
+                            <i class="fas fa-clock"></i> 
+                            <span id="currentTime">00:00:00</span>
+                        </span>
+                        <button class="btn btn-outline-warning btn-sm ms-2" type="button" onclick="toggleCalendar()">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span id="currentDate">00/00/0000</span>
+                        </button>
                     </span>
-                    <button class="btn btn-outline-warning btn-sm ms-2" type="button" onclick="toggleCalendar()">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span id="currentDate">00/00/0000</span>
-                    </button>
-                </span>
-            </div>
-            <form class="d-none d-md-inline-block form-inline">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-warning" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                 </div>
-            </form>
-        </div>
+                <form class="d-none d-md-inline-block form-inline">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                        <button class="btn btn-warning" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
@@ -95,7 +96,7 @@ $conn->close();
                                         class="rounded-circle border border-light" width="120" height="120" alt="" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="../../employee/supervisor/profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../../employee/staff/profile.php">Profile</a></li>
                                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                     <li><hr class="dropdown-divider" /></li>
@@ -106,25 +107,25 @@ $conn->close();
                                 <span class="big text-light mb-1">
                                     <?php
                                         if ($employeeInfo) {
-                                            echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['middlename'] . ' ' . $employeeInfo['lastname']);
+                                        echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['middlename'] . ' ' . $employeeInfo['lastname']);
                                         } else {
-                                            echo "User information not available.";
+                                        echo "Admin information not available.";
                                         }
                                     ?>
                                 </span>      
                                 <span class="big text-light">
                                     <?php
                                         if ($employeeInfo) {
-                                            echo htmlspecialchars($employeeInfo['role']);
+                                        echo htmlspecialchars($employeeInfo['role']);
                                         } else {
-                                            echo "User information not available.";
+                                        echo "User information not available.";
                                         }
                                     ?>
                                 </span>
                             </li>
                         </ul>
                         <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Employee Dashboard</div>
-                        <a class="nav-link text-light" href="../../employee/supervisor/dashboard.php">
+                        <a class="nav-link text-light" href="../../employee/staff/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
@@ -135,7 +136,7 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseTAD" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/attendance.php">Attendance</a>
+                                <a class="nav-link text-light" href="../../employee/staff/attendance.php">Attendance Scanner</a>
                                 <a class="nav-link text-light" href="">Timesheet</a>
                             </nav>
                         </div>
@@ -146,8 +147,8 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/leave_file.php">File Leave</a>
-                                <a class="nav-link text-light" href="../../employee/supervisor/leave_request.php">Leave Request</a>
+                            <a class="nav-link text-light" href="../../employee/staff/leave_file.php">File Leave</a>
+                            <a class="nav-link text-light" href="../../employee/staff/leave_balance.php">View Remaining Leave</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
@@ -157,7 +158,7 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/evaluation.php">Evaluation</a>
+                            <a class="nav-link text-light" href="../../employee/staff/evaluation.php">Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -167,9 +168,9 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseSR" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/awardee.php">Awardee</a>
+                                <a class="nav-link text-light" href="../../employee/staff/rating.php">View Ratings</a>
                             </nav>
-                             </div>
+                        </div>
                         <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
@@ -189,7 +190,7 @@ $conn->close();
             </nav>
         </div>
         <div id="layoutSidenav_content">
-            <main class="container-fluid position-relative bg-black px-4">
+            <main class="bg-black">
                 <div class="container" id="calendarContainer" 
                     style="position: fixed; top: 9%; right: 0; z-index: 1050; 
                     width: 700px; display: none;">
@@ -198,33 +199,35 @@ $conn->close();
                             <div id="calendar" class="p-2"></div>
                         </div>
                     </div>
-                </div> 
-                <h1 class="mb-2 text-light">File Leave</h1>                   
-                <div class="card bg-black mt-5 py-4">
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <div class="card leave-balance-card bg-dark text-light">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">Leave Information</h4>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h5>Overall Available Leave</h5>
-                                            <p class="fs-4 text-success"><?php echo htmlspecialchars($employeeInfo['available_leaves']); ?> days</p>
-                                            <a class="btn btn-success" href="../../employee/staff/leave_details.php"> View leave details</a>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="p-3">
-                                                <h5>Used Leave</h5>
-                                                <p class="fs-4 text-danger"><?php echo htmlspecialchars($usedLeave); ?> days</p>
-                                                <a class="btn btn-danger" href="../staff/leave_history.php"> View leave history</a>
+                </div>        
+                <div class="container mt-5">
+                        <!-- Leave Balance Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card leave-balance-card bg-dark text-light">
+                                    <div class="card-body text-center">
+                                        <h4 class="card-title">Leave Information</h4>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5>Overall Available Leave</h5>
+                                                    <p class="fs-4 text-success"><?php echo htmlspecialchars($employeeInfo['available_leaves']); ?> days</p>
+                                                    <a class="btn btn-success" href="#"> View leave details</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5>Used Leave</h5>
+                                                    <p class="fs-4 text-danger"><?php echo htmlspecialchars($usedLeave); ?> days</p>
+                                                    <a class="btn btn-danger" href="#"> View leave history</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <form id="leave-request-form" action="../../employee_db/supervisor/leave_conn.php" method="POST" enctype="multipart/form-data">
+                    <form id="leave-request-form" action="../../employee_db/staff/leave_conn.php" method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card leave-form text bg-dark text-light">
@@ -279,62 +282,92 @@ $conn->close();
                             </div>
                         </div>
                     </form>
-                </div>
+                </div> 
             </main>
-            <!-- ...existing code... -->
+                <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content bg-dark text-light">
+                            <div class="modal-header border-bottom border-warning">
+                                <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to log out?
+                            </div>
+                            <div class="modal-footer border-top border-warning">
+                                <button type="button" class="btn border-secondary text-light" data-bs-dismiss="modal">Cancel</button>
+                                <form action="../../employee/logout.php" method="POST">
+                                    <button type="submit" class="btn btn-danger">Logout</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            <footer class="py-4 bg-dark text-light mt-auto border-top border-warning">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2024</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms & Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
     <script>
         //CALENDAR 
         let calendar;
-        function toggleCalendar() {
-            const calendarContainer = document.getElementById('calendarContainer');
-            if (calendarContainer.style.display === 'none' || calendarContainer.style.display === '') {
-                calendarContainer.style.display = 'block';
-                if (!calendar) {
-                    initializeCalendar();
-                }
-            } else {
-                calendarContainer.style.display = 'none';
+            function toggleCalendar() {
+                const calendarContainer = document.getElementById('calendarContainer');
+                    if (calendarContainer.style.display === 'none' || calendarContainer.style.display === '') {
+                        calendarContainer.style.display = 'block';
+                        if (!calendar) {
+                            initializeCalendar();
+                         }
+                        } else {
+                            calendarContainer.style.display = 'none';
+                        }
             }
-        }
 
-        function initializeCalendar() {
-            const calendarEl = document.getElementById('calendar');
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                height: 440,  
-                events: {
-                    url: '../../db/holiday.php',  
-                    method: 'GET',
-                    failure: function() {
+            function initializeCalendar() {
+                const calendarEl = document.getElementById('calendar');
+                    calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        },
+                        height: 440,  
+                        events: {
+                        url: '../../db/holiday.php',  
+                        method: 'GET',
+                        failure: function() {
                         alert('There was an error fetching events!');
-                    }
-                }
+                        }
+                        }
+                    });
+
+                    calendar.render();
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentDateElement = document.getElementById('currentDate');
+                const currentDate = new Date().toLocaleDateString(); 
+                currentDateElement.textContent = currentDate; 
             });
 
-            calendar.render();
-        }
+            document.addEventListener('click', function(event) {
+                const calendarContainer = document.getElementById('calendarContainer');
+                const calendarButton = document.querySelector('button[onclick="toggleCalendar()"]');
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const currentDateElement = document.getElementById('currentDate');
-            const currentDate = new Date().toLocaleDateString(); 
-            currentDateElement.textContent = currentDate; 
-        });
-
-        document.addEventListener('click', function(event) {
-            const calendarContainer = document.getElementById('calendarContainer');
-            const calendarButton = document.querySelector('button[onclick="toggleCalendar()"]');
-
-            if (!calendarContainer.contains(event.target) && !calendarButton.contains(event.target)) {
-                calendarContainer.style.display = 'none';
-            }
-        });
+                    if (!calendarContainer.contains(event.target) && !calendarButton.contains(event.target)) {
+                        calendarContainer.style.display = 'none';
+                        }
+            });
         //CALENDAR END
 
         //TIME 
@@ -345,12 +378,12 @@ $conn->close();
             const currentDate = new Date();
     
             currentDate.setHours(currentDate.getHours() + 0);
-            const hours = currentDate.getHours();
-            const minutes = currentDate.getMinutes();
-            const seconds = currentDate.getSeconds();
-            const formattedHours = hours < 10 ? '0' + hours : hours;
-            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-            const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+                const hours = currentDate.getHours();
+                const minutes = currentDate.getMinutes();
+                const seconds = currentDate.getSeconds();
+                const formattedHours = hours < 10 ? '0' + hours : hours;
+                const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
 
             currentTimeElement.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
             currentDateElement.textContent = currentDate.toLocaleDateString();
@@ -362,16 +395,12 @@ $conn->close();
         //LEAVE DAYS
         document.getElementById('start_date').addEventListener('change', calculateLeaveDays);
         document.getElementById('end_date').addEventListener('change', calculateLeaveDays);
-        document.getElementById('leave_type').addEventListener('change', calculateLeaveDays);
-
-        const leaveLimits = <?php echo json_encode($leaveLimits); ?>;
 
         function calculateLeaveDays() {
             const start_date = document.getElementById('start_date').value;
             const end_date = document.getElementById('end_date').value;
-            const leave_type = document.getElementById('leave_type').value;
-
-            if (start_date && end_date && leave_type) {
+            
+            if (start_date && end_date) {
                 const start = new Date(start_date);
                 const end = new Date(end_date);
                 let totalDays = 0;
@@ -384,18 +413,12 @@ $conn->close();
                     }
                 }
 
-                // Check if the total days exceed the leave limit
-                if (totalDays > leaveLimits[leave_type]) {
-                    alert(`You cannot request more than ${leaveLimits[leave_type]} days for ${leave_type}.`);
-                    document.getElementById('leave_days').value = '';
-                } else {
-                    // Update the number of days in the input field
-                    document.getElementById('leave_days').value = totalDays;
-                }
+                // Update the number of days in the input field
+                document.getElementById('leave_days').value = totalDays;
             }
         }
         //LEAVE DAYS END
-    </script>
+</script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'> </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="../../js/employee.js"></script>

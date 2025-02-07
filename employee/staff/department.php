@@ -19,7 +19,7 @@ $stmt->close();
 
 // Fetch employees in the same department
 $department = $employeeInfo['department'];
-$sql = "SELECT e_id, firstname, middlename, lastname, email, role, phone_number, address FROM employee_register WHERE department = ?";
+$sql = "SELECT e_id, firstname, middlename, lastname, email, role, phone_number, address, pfp FROM employee_register WHERE department = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $department);
 $stmt->execute();
@@ -96,6 +96,18 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
         }
         .sb-sidenav-toggled .fixed-table {
             margin: 0 auto; /* Center the table */
+        }
+        .modal-content .table {
+            font-size: 1.25rem; /* Increase table font size */
+        }
+        .modal-content h3, .modal-content h5 {
+            font-size: 2rem; /* Increase header font size */
+        }
+        .modal-content .table th, .modal-content .table td {
+            padding: 1rem; /* Increase padding for table cells */
+        }
+        .star-rating .star {
+            cursor: pointer; /* Change cursor to pointer when hovering over stars */
         }
     </style>
 </head>
@@ -280,7 +292,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
                                                 <td><?php echo htmlspecialchars($employee['address']); ?></td>
                                                 <td class='d-flex justify-content-around'>
                                                     <button class="btn btn-success btn-sm me-2" 
-                                                        onclick="openModal(<?php echo $employee['e_id']; ?>, '<?php echo htmlspecialchars($employee['firstname']); ?>', '<?php echo htmlspecialchars($employee['lastname']); ?>', '<?php echo htmlspecialchars($employee['email']); ?>', '<?php echo htmlspecialchars($employee['role']); ?>', '<?php echo htmlspecialchars($employee['phone_number']); ?>', '<?php echo htmlspecialchars($employee['address']); ?>')">
+                                                        onclick="openModal(<?php echo $employee['e_id']; ?>, '<?php echo htmlspecialchars($employee['firstname']); ?>', '<?php echo htmlspecialchars($employee['lastname']); ?>', '<?php echo htmlspecialchars($employee['email']); ?>', '<?php echo htmlspecialchars($employee['role']); ?>', '<?php echo htmlspecialchars($employee['phone_number']); ?>', '<?php echo htmlspecialchars($employee['address']); ?>', '<?php echo htmlspecialchars($employee['pfp']); ?>')">
                                                         Evaluate
                                                     </button>
                                                 </td>
@@ -333,15 +345,32 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
     <!-- Modal Structure -->
     <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content bg-dark text-light">
                 <div class="modal-header">
                     <h5 class="modal-title" id="employeeModalLabel">Employee Evaluation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="employeeEvaluationForm">
+                        <!-- Employee Info -->
+                        <div class="mb-3 text-center">
+                            <img id="employeeProfilePicture" src="../../img/defaultpfp.png" class="rounded-circle border border-light mb-3" width="120" height="120" alt="Profile Picture" />
+                            <h3 id="employeeName"></h3>
+                            <h5 id="employeeRole"></h5>
+                        </div>
                         <!-- Evaluation Questions -->
-                        <div id="evaluationQuestions"></div>
+                        <div id="evaluationQuestions">
+                            <table class="table table-bordered text-light">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Question</th>
+                                        <th>Rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="evaluationQuestionsBody"></tbody>
+                            </table>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -361,6 +390,9 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
     let calendar; // Declare calendar variable globally
 
     function toggleCalendar() {
+        const calendarContainer = document.getElementById('calendarContainer');
+        if (calendarContainer.style.display === 'none' || calendarContainer.style.display === '') {
+            calendarContainer.style.display = 'block';
             // Initialize the calendar if it hasn't been initialized yet
             if (!calendar) {
                 initializeCalendar();
@@ -511,7 +543,12 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
         // You can replace this with the code for opening an evaluation form or redirecting to an evaluation page, etc.
     }
 
-    function openModal(e_id, firstName, lastName, email, role, phoneNumber, address) {
+    function openModal(e_id, firstName, lastName, email, role, phoneNumber, address, pfp) {
+        // Set employee info
+        document.getElementById('employeeName').textContent = `Name: ${firstName} ${lastName}`;
+        document.getElementById('employeeRole').textContent = `Role: ${role}`;
+        document.getElementById('employeeProfilePicture').src = pfp ? `../../img/${pfp}` : '../../img/defaultpfp.png';
+
         // Generate evaluation questions
         const evaluationQuestions = {
             "Quality of Work": [
@@ -541,23 +578,24 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
             ]
         };
 
-        const questionsDiv = document.getElementById('evaluationQuestions');
-        questionsDiv.innerHTML = ''; // Clear previous questions
+        const questionsBody = document.getElementById('evaluationQuestionsBody');
+        questionsBody.innerHTML = ''; // Clear previous questions
 
-        // Generate HTML for questions
+        // Generate HTML for questions in table format
         for (const [category, questions] of Object.entries(evaluationQuestions)) {
-            questionsDiv.innerHTML += `<h5>${category}</h5>`;
             questions.forEach((question, index) => {
-                questionsDiv.innerHTML += `
-                    <div class="mb-3">
-                        <label>${question}</label>
-                        <div class="star-rating">
-                            ${[6, 5, 4, 3, 2, 1].map(value => `
-                                <input type="radio" name="${category.replace(/\s/g, '')}q${index}" value="${value}" id="${category.replace(/\s/g, '')}q${index}star${value}">
-                                <label for="${category.replace(/\s/g, '')}q${index}star${value}">&#9733;</label>
-                            `).join('')}
-                        </div>
-                    </div>
+                questionsBody.innerHTML += `
+                    <tr>
+                        <td style="font-size: 1.25rem;">${category}</td>
+                        <td style="font-size: 1.25rem;">${question}</td>
+                        <td>
+                            <div class="star-rating">
+                                ${[1, 2, 3, 4, 5, 6].map(value => `
+                                    <span class="star" data-value="${value}" data-category="${category.replace(/\s/g, '')}q${index}" style="font-size: 1.5rem;">&#9733;</span>
+                                `).join('')}
+                            </div>
+                        </td>
+                    </tr>
                 `;
             });
         }
@@ -565,20 +603,34 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
         // Open the modal
         var myModal = new bootstrap.Modal(document.getElementById('employeeModal'));
         myModal.show();
+
+        // Add event listeners for star rating
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                const category = this.getAttribute('data-category');
+                document.querySelectorAll(`.star[data-category="${category}"]`).forEach(s => {
+                    s.style.color = s.getAttribute('data-value') <= value ? 'gold' : 'white';
+                });
+            });
+        });
     }
 
     function submitEvaluation() {
         const evaluations = [];
-        const questionsDiv = document.getElementById('evaluationQuestions');
+        const questionsBody = document.getElementById('evaluationQuestionsBody');
 
-        questionsDiv.querySelectorAll('input[type="radio"]:checked').forEach(input => {
-            evaluations.push({
-                question: input.name,
-                rating: input.value
-            });
+        questionsBody.querySelectorAll('.star-rating').forEach(starRating => {
+            const selectedStar = Array.from(starRating.children).find(star => star.style.color === 'gold');
+            if (selectedStar) {
+                evaluations.push({
+                    question: selectedStar.getAttribute('data-category'),
+                    rating: selectedStar.getAttribute('data-value')
+                });
+            }
         });
 
-        const totalQuestions = questionsDiv.querySelectorAll('.star-rating').length;
+        const totalQuestions = questionsBody.querySelectorAll('.star-rating').length;
 
         if (evaluations.length !== totalQuestions) {
             alert('Please complete the evaluation before submitting.');
@@ -608,13 +660,12 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
             alert('An error occurred while submitting the evaluation.');
         });
     }
+
+    // Sidebar toggle functionality
+    document.getElementById('sidebarToggle').addEventListener('click', function () {
+        document.body.classList.toggle('sb-sidenav-toggled');
+    });
 </script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'> </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/employee.js"></script>
-
-
 </body>
-
 </html>
 

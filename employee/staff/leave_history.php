@@ -27,7 +27,9 @@ $searchTerm = isset($_GET['searchTerm']) ? $_GET['searchTerm'] : '';
 $fromDate = isset($_GET['fromDate']) ? $_GET['fromDate'] : '';
 $toDate = isset($_GET['toDate']) ? $_GET['toDate'] : '';
 $statusFilter = isset($_GET['statusFilter']) ? $_GET['statusFilter'] : '';
+$timeFrame = isset($_GET['timeFrame']) ? $_GET['timeFrame'] : '';
 
+// Adjust SQL query to always show the latest history at the top
 $sql = "
     SELECT lr.*, e.firstname, e.lastname, s.firstname AS supervisor_firstname, s.lastname AS supervisor_lastname 
     FROM leave_requests lr
@@ -47,8 +49,17 @@ if ($toDate) {
 if ($statusFilter) {
     $sql .= " AND lr.status = ?";
 }
+if ($timeFrame) {
+    if ($timeFrame == 'day') {
+        $sql .= " AND lr.created_at >= CURDATE()";
+    } elseif ($timeFrame == 'week') {
+        $sql .= " AND lr.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)";
+    } elseif ($timeFrame == 'month') {
+        $sql .= " AND lr.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+    }
+}
 
-$sql .= " ORDER BY lr.created_at ASC";
+$sql .= " ORDER BY lr.created_at DESC"; // Ensure latest history is at the top
 
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
@@ -110,13 +121,47 @@ function calculateLeaveDays($start_date, $end_date) {
     <title>Leave History</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+        }
+        .table-dark {
+            background-color: #343a40;
+        }
+        .table-dark th, .table-dark td {
+            color: #fff;
+        }
+        .card-body {
+            background-color: #343a40;
+        }
+        .table-primary th {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .form-select, .form-control {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .btn-primary, .btn-dark {
+            background-color: #6c757d; /* Grey background */
+            border-color: #6c757d; /* Grey border */
+            color: #fff; /* White text */
+        }
+        .form-control::placeholder {
+            color: #f8f9fa; /* Whiter placeholder text */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3">Leave History</h1>
-            <button class="btn btn-primary">Export</button>
+            <div>
+                <button class="btn btn-dark" onclick="window.location.href='leave_request.php'">Back</button> <!-- Navigate to leave_request page -->
+                <button class="btn btn-dark">Export</button>
+            </div>
         </div>
 
         <!-- Filters -->
@@ -143,7 +188,15 @@ function calculateLeaveDays($start_date, $end_date) {
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        <select class="form-select" name="timeFrame">
+                            <option value="">Filter by Time Frame</option>
+                            <option value="day" <?php if ($timeFrame == 'day') echo 'selected'; ?>>Last Day</option>
+                            <option value="week" <?php if ($timeFrame == 'week') echo 'selected'; ?>>Last Week</option>
+                            <option value="month" <?php if ($timeFrame == 'month') echo 'selected'; ?>>Last Month</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-dark w-100">Apply Filters</button>
                     </div>
                 </form>
             </div>
@@ -151,7 +204,7 @@ function calculateLeaveDays($start_date, $end_date) {
 
         <!-- Leave History Table -->
         <div class="table-responsive">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-dark table-striped">
                 <thead class="table-primary">
                     <tr>
                         <th>Date Applied</th>
@@ -202,22 +255,23 @@ function calculateLeaveDays($start_date, $end_date) {
                             </td>
                             <td>
                                 <?php 
+                                $supervisorName = htmlspecialchars($row['supervisor_firstname'] . ' ' . $row['supervisor_lastname']);
                                 if ($status === 'Supervisor Approved' || $status === 'Supervisor Denied') {
-                                    $supervisorName = htmlspecialchars($row['supervisor_firstname'] . ' ' . $row['supervisor_lastname']);
                                     echo '<span class="text-primary" style="font-weight: bold;">' . $supervisorName . '</span>';
                                 } elseif ($status === 'Denied') {
-                                    $supervisorName = htmlspecialchars($row['supervisor_firstname'] . ' ' . $row['supervisor_lastname']);
                                     echo '<span class="text-danger" style="font-weight: bold;">' . $supervisorName . '</span>';
+                                } elseif ($status === 'Approved') {
+                                    echo '<span class="text-success" style="font-weight: bold;">' . $supervisorName . '</span>';
                                 } else {
                                     echo 'N/A';
                                 }
                                 ?>
                             </td>
                             <td>
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-sm btn-info" onclick="viewItem()">View</button>
-                                    <button class="btn btn-sm btn-warning" onclick="editItem()">Edit</button>
-                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" <?php if ($row['status'] === 'Approved') echo 'disabled'; ?>>Delete</button>
+                                <div class="btn-group" role="group" style="gap: 10px; display: flex;">
+                                    <button class="btn btn-sm btn-info flex-fill" onclick="viewItem()">View</button>
+                                    <button class="btn btn-sm btn-warning flex-fill" onclick="editItem()">Edit</button>
+                                    <button class="btn btn-sm btn-danger flex-fill" data-bs-toggle="modal" data-bs-target="#deleteModal" <?php if ($row['status'] === 'Approved') echo 'disabled'; ?>>Delete</button>
                                 </div>
                             </td>
                        </tr>

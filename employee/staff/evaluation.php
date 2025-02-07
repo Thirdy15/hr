@@ -158,8 +158,7 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/staff/leave_file.php">File Leave</a>
-                            <a class="nav-link text-light" href="../../employee/staff/leave_balance.php">View Remaining Leave</a>
+                            <a class="nav-link text-light" href="../../employee/staff/leave_request.php">File Leave</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
@@ -169,7 +168,8 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/staff/evaluation.php">Evaluation</a>
+                            <a class="nav-link text-light" href="../../employee/staff/evaluation.php">View Ratings</a>
+                            <a class="nav-link text-light" href="../../employee/staff/deparment.php">Department Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">

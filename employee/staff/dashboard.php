@@ -193,9 +193,7 @@ if ($result->num_rows > 0) {
                 <button class="btn btn-warning" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
             </div>
             </form>
-            <div class="text-light ms-3">
-                <?php echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['lastname']); ?>
-            </div>
+           
         </div>
     </nav>
     <div id="layoutSidenav">
@@ -252,8 +250,7 @@ if ($result->num_rows > 0) {
                         </a>
                         <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/leave_file.php">File Leave</a>
-                                <a class="nav-link text-light" href="../../employee/staff/leave_request.php">Leave Request</a>
+                                <a class="nav-link text-light" href="../../employee/staff/leave_request.php">File Leave</a>
                                
                             </nav>
                         </div>
@@ -277,7 +274,7 @@ if ($result->num_rows > 0) {
                         </a>
                         <div class="collapse" id="collapseSR" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/awardee.php">View Your Rating</a>
+                                <a class="nav-link text-light" href="../../employee/staff/awardee.php">Awardee</a>
                             </nav>
                         </div> 
                         <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Feedback</div> 

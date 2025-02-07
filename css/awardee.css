@@ -87,13 +87,16 @@
     margin-top: 20px;
   }
   .employee-card {
-    background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%);
-    border-radius: 20px;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 2rem auto;
-    color: white;
-  }
+    display: flex;
+    flex-direction: column;  /* Ensures vertical growth */
+    height: auto;  /* Allows it to grow vertically based on content */
+    width: 100%;  /* Takes up the full available width */
+    max-width: 1200px;  /* Optional: Set a max-width for larger screens */
+    margin: 20px auto;  /* Optional: Add some margin around the card */
+    justify-content: flex-start; /* Adjust the card content positioning */
+    padding: 20px;  /* Adds padding inside the card */
+}
+
   
   .dashboard-title {
     text-align: center;
@@ -104,18 +107,19 @@
   }
   
   .metrics-container {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-  
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  /* Distribute the columns evenly */
+    align-items: stretch;  /* Ensure the columns stretch vertically */
+}
   .metrics-column {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
-  
+  .metrics-column, .profile-section {
+    flex-grow: 1;  /* Allow these sections to grow and fill available space */
+}
   .metric-box {
     background: rgba(64, 61, 223, 0.27);
     border-radius: 15px;
@@ -141,10 +145,10 @@
   .profile-section {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-  }
-  
+    flex-grow: 1;  /* Allow it to grow and fill available space */
+}
   .progress-circle-container {
     position: relative;
     width: 200px;
@@ -233,8 +237,8 @@
     }
     
     .employee-card {
-        margin: 1rem;
-        padding: 1rem;
+      display: flex;
+      width: 100%;  /* Make it stretch to fill the width of the container */
     }
   }
   

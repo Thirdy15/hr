@@ -17,7 +17,7 @@ if (isset($_SESSION['update_success'])) {
 $employeeId = $_SESSION['e_id'];
 $sql = "SELECT 
     e.e_id, e.firstname, e.middlename, e.lastname, e.birthdate, e.email, e.created_at,
-    e.role, e.position, e.department, e.phone_number, e.address, e.pfp, 
+    e.role, e.position, e.department, e.phone_number, e.address, e.pfp, e.gender, 
     ua.login_time, 
     -- Fetch the last valid logout time
     (SELECT ua2.logout_time 
@@ -314,6 +314,10 @@ $conn->close();
                                                     <div class="col-sm-12 bg-dark form-floating mb-3">
                                                         <input class="form-control fw-bold" name="email" value="<?php echo htmlspecialchars($employeeInfo['email']); ?>" readonly>
                                                         <label class="fw-bold">Email:</label>
+                                                    </div>
+                                                    <div class="col-sm-12 bg-dark form-floating mb-3">
+                                                        <input class="form-control fw-bold" name="gender" value="<?php echo htmlspecialchars($employeeInfo['gender']); ?>" readonly>
+                                                        <label class="fw-bold">Gender:</label>
                                                     </div>
                                                 </div>
                                             </div>

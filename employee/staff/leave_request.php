@@ -9,7 +9,7 @@ if (!isset($_SESSION['e_id'])) {
 
 // Fetch user info
 $employeeId = $_SESSION['e_id'];
-$sql = "SELECT e_id, firstname, middlename, lastname, birthdate, email, available_leaves, role, position, department, phone_number, address, pfp FROM employee_register WHERE e_id = ?";
+$sql = "SELECT e_id, firstname, middlename, lastname, birthdate, email, available_leaves, role, position, department, phone_number, address, pfp, gender FROM employee_register WHERE e_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $employeeId);
 $stmt->execute();
@@ -25,20 +25,31 @@ $status_message = isset($_SESSION['status_message']) ? $_SESSION['status_message
 unset($_SESSION['status_message']); // Clear the status message after displaying it
 
 // Fetch the used leave by summing up approved leave days based on leave_start_date and leave_end_date
-$usedLeaveQuery = "SELECT SUM(DATEDIFF(end_date, start_date) + 1) AS used_leaves FROM leave_requests WHERE e_id = ? AND status = 'approved'";
+$usedLeaveQuery = "SELECT leave_type, SUM(DATEDIFF(end_date, start_date) + 1) AS used_days FROM leave_requests WHERE e_id = ? AND status = 'approved' GROUP BY leave_type";
 $usedLeaveStmt = $conn->prepare($usedLeaveQuery);
 $usedLeaveStmt->bind_param("i", $employeeId);
 $usedLeaveStmt->execute();
 $usedLeaveResult = $usedLeaveStmt->get_result();
-$usedLeaveRow = $usedLeaveResult->fetch_assoc();
-$usedLeave = $usedLeaveRow['used_leaves'] ?? 0; // Default to 0 if no leave has been used
+$usedLeaveDays = [];
+while ($row = $usedLeaveResult->fetch_assoc()) {
+    $usedLeaveDays[$row['leave_type']] = $row['used_days'];
+}
 
-// Calculate remaining available leaves (optional, if needed for display or logic)
-$availableLeaves = $employeeInfo['available_leaves'];
+// Fetch the number of leave requests for each leave type
+$leaveRequestsQuery = "SELECT leave_type, COUNT(*) AS request_count FROM leave_requests WHERE e_id = ? AND status = 'approved' GROUP BY leave_type";
+$leaveRequestsStmt = $conn->prepare($leaveRequestsQuery);
+$leaveRequestsStmt->bind_param("i", $employeeId);
+$leaveRequestsStmt->execute();
+$leaveRequestsResult = $leaveRequestsStmt->get_result();
+$leaveRequests = [];
+while ($row = $leaveRequestsResult->fetch_assoc()) {
+    $leaveRequests[$row['leave_type']] = $row['request_count'];
+}
 
 // Close the database connection
 $stmt->close();
 $usedLeaveStmt->close();
+$leaveRequestsStmt->close();
 $conn->close();
 ?>
 
@@ -212,14 +223,14 @@ $conn->close();
                                                 <div class="p-3">
                                                     <h5>Overall Available Leave</h5>
                                                     <p class="fs-4 text-success"><?php echo htmlspecialchars($employeeInfo['available_leaves']); ?> days</p>
-                                                    <a class="btn btn-success" href="#"> View leave details</a>
+                                                    <a class="btn btn-success" href="../../employee/staff/leave_details.php"> View leave details</a>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="p-3">
                                                     <h5>Used Leave</h5>
-                                                    <p class="fs-4 text-danger"><?php echo htmlspecialchars($usedLeave); ?> days</p>
-                                                    <a class="btn btn-danger" href="#"> View leave history</a>
+                                                    <p class="fs-4 text-danger"><?php echo htmlspecialchars(array_sum($usedLeaveDays)); ?> days</p>
+                                                    <a class="btn btn-danger" href="../../employee/staff/leave_history.php"> View leave history</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -227,7 +238,7 @@ $conn->close();
                                 </div>
                             </div>
                         </div>
-                    <form id="leave-request-form" action="../../employee_db/staff/leave_conn.php" method="POST" enctype="multipart/form-data">
+                    <form id="leave-request-form" action="../../employee_db/staff/leave_conn.php" method="POST" enctype="multipart/form-data" onsubmit="return validateLeaveRequest()">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card leave-form text bg-dark text-light">
@@ -247,24 +258,35 @@ $conn->close();
                                           <div class="col-md-6">
                                                 <label for="leave_type" class="form-label">Leave Type</label>
                                                 <select id="leave_type" name="leave_type" class="form-control" required>
-                                                    <option value="" disabled selected>Select leave type</option>
-                                                    <option value="Sick Leave">Sick Leave</option>
-                                                    <option value="Vacation Leave">Vacation Leave</option>
-                                                    <option value="Emergency Leave">Emergency Leave</option>
-                                                    <option value="Maternity Leave">Maternity Leave</option>
-                                                    <option value="Service Incentive Leave (SIL)">Service Incentive Leave (SIL)</option>
-                                                    <option value="Paternity Leave">Paternity Leave - Men</option>
-                                                    <option value="Solo Parent Leave">Solo Parent Leave - Both men and women</option>
-                                                    <option value="Leave for Victims of Violence Against Women and Children (VAWC)">Leave for Victims of Violence Against Women and Children (VAWC) - Women</option>
-                                                    <option value="Special Leave for Women (Gynecological Disorders)">Special Leave for Women (Gynecological Disorders) - Women</option>
-                                                    <option value="Bereavement Leave">Bereavement Leave</option>
-                                                    <option value="Emergency/Calamity Leave">Emergency/Calamity Leave</option>
-                                                    <option value="Study Leave">Study Leave</option>
-                                                    <option value="Leave for Public Health Workers">Leave for Public Health Workers</option>
-                                                    <option value="Rehabilitation Leave">Rehabilitation Leave</option>
-                                                    <option value="Special Non-Working Holiday Leave">Special Non-Working Holiday Leave</option>
-                                                    <option value="Religious Holiday Leave">Religious Holiday Leave</option>
-                                                </select>
+                                                            <option value="" disabled selected>Select leave type</option>
+                                                            <?php
+                                                            $leaveTypes = [
+                                                                "Service Incentive leave" => 5,
+                                                                "Vacation leave" => 14,
+                                                                "Sick leave" => 15,
+                                                                "Bereavement leave" => 5,
+                                                                "Parental leave" => 7,
+                                                                "Emergency leave" => 5,
+                                                                "Maternity leave" => 105,
+                                                                "Paternity leave" => 14,
+                                                                "Special leave benefit for woman" => 60,
+                                                                "Victims of violence against woman and their children" => 10,
+                                                                "Jury duty leave" => 5
+                                                            ];
+
+                                                            foreach ($leaveTypes as $type => $limit) {
+                                                                if (($employeeInfo['gender'] == 'Female' && in_array($type, ["Paternity leave"])) ||
+                                                                    ($employeeInfo['gender'] == 'Male' && in_array($type, ["Maternity leave", "Special leave benefit for woman", "Victims of violence against woman and their children"]))) {
+                                                                    continue;
+                                                                }
+                                                                $used = $usedLeaveDays[$type] ?? 0; // Get the number of used leave days for this type
+                                                                $remaining = $limit - $used; // Calculate remaining leave days
+                                                                $disabled = ($remaining <= 0) ? 'disabled' : ''; // Disable if no remaining leave days
+                                                                $title = ($remaining <= 0) ? 'title="This leave type has reached its limit"' : '';
+                                                                echo "<option value=\"$type\" $disabled $title>$type: $remaining days remaining</option>";
+                                                            }
+                                                            ?>
+                                                        </select>
                                             </div>
 
                                             <div class="col-md-6">
@@ -408,10 +430,12 @@ $conn->close();
         //LEAVE DAYS
         document.getElementById('start_date').addEventListener('change', calculateLeaveDays);
         document.getElementById('end_date').addEventListener('change', calculateLeaveDays);
+        document.getElementById('leave_type').addEventListener('change', calculateLeaveDays);
 
         function calculateLeaveDays() {
             const start_date = document.getElementById('start_date').value;
             const end_date = document.getElementById('end_date').value;
+            const leave_type = document.getElementById('leave_type').value;
             
             if (start_date && end_date) {
                 const start = new Date(start_date);
@@ -426,11 +450,47 @@ $conn->close();
                     }
                 }
 
+                // Check if leave type is sick leave and limit to 15 days
+                if (leave_type === 'Sick leave' && totalDays > 15) {
+                    totalDays = 15;
+                    alert('Sick leave cannot exceed 15 days.');
+                }
+
                 // Update the number of days in the input field
                 document.getElementById('leave_days').value = totalDays;
             }
         }
         //LEAVE DAYS END
+
+        function validateLeaveRequest() {
+            const leave_type = document.getElementById('leave_type').value;
+            const leave_days = parseInt(document.getElementById('leave_days').value);
+            const leaveLimits = {
+                "Service Incentive leave": 5,
+                "Vacation leave": 14,
+                "Sick leave": 15,
+                "Bereavement leave": 5,
+                "Parental leave": 7,
+                "Emergency leave": 5,
+                "Maternity leave": 105,
+                "Paternity leave": 14,
+                "Special leave benefit for woman": 60,
+                "Victims of violence against woman and their children": 10,
+                "Jury duty leave": 5
+            };
+
+            if (leave_type && leave_days) {
+                const usedLeaves = <?php echo json_encode($leaveRequests); ?>;
+                const limit = leaveLimits[leave_type];
+                const used = usedLeaves[leave_type] || 0;
+
+                if (used + leave_days > limit) {
+                    alert(`You have exceeded the leave limit for ${leave_type}.`);
+                    return false;
+                }
+            }
+            return true;
+        }
 </script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'> </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
