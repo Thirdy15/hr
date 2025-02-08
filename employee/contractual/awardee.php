@@ -200,7 +200,7 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                 <form class="d-none d-md-inline-block form-inline">
                     <div class="input-group">
                         <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                        <button class="btn btn-secondary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                        <button class="btn btn-warning" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                     </div>
                 </form>
             </div>
@@ -221,7 +221,7 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                                         class="rounded-circle border border-light" width="120" height="120" alt="Profile Picture" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="../../employee/staff/profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../../employee/contractual/profile.php">Profile</a></li>
                                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                     <li><hr class="dropdown-divider" /></li>
@@ -249,8 +249,8 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Employee Dashboard</div>
-                        <a class="nav-link text-light" href="../../employee/staff/dashboard.php">
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary"> mt-3">Employee Dashboard</div>
+                        <a class="nav-link text-light" href="../../employee/contractual/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
@@ -261,7 +261,7 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                         </a>
                         <div class="collapse" id="collapseTAD" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/attendance.php">Attendance</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/attendance.php">Attendance</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLM" aria-expanded="false" aria-controls="collapseLM">
@@ -271,7 +271,7 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                         </a>
                         <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/leave_request.php">Leave Requests</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/leave_request.php">Leave Requests</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
@@ -281,10 +281,10 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/evaluation.php">View Ratings</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/evaluation.php">View Ratings</a>
                             </nav>
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/department.php">Department Evaluation</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/department.php">Department Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -294,10 +294,10 @@ function getTopEmployeesByCriterion($conn, $criterion, $criterionLabel, $index) 
                         </a>
                         <div class="collapse" id="collapseSR" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/awardee.php">Awardee</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/awardee.php">Awardee</a>
                             </nav>
                         </div>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary">Account Management</div>
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary">">Account Management</div>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-secondary">

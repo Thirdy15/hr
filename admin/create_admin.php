@@ -37,7 +37,7 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-7">
                             <div class="card shadow-lg border-0 rounded-lg mt-5 my-5 bg-dark">
-                                <div class="card-header border-bottom border-1 border-warning">
+                                <div class="card-header border-bottom border-1 border-secondary">
                                     <h3 class="text-center text-light font-weight-light my-4">Create Admin Account</h3>
                                     <div id="form-feedback" class="alert text-center" style="display: none;"></div>
                                 </div>
@@ -131,7 +131,7 @@
                                         </div> 
                                     </form>
                                 </div>
-                                <div class="card-footer text-center border-top border-1 border-warning">
+                                <div class="card-footer text-center border-top border-1 border-secondary">
                                     <p class="small text-center text-muted mt-1">Human Resource 2</p>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                 </div>
             </main>
         </div>
-        <footer class="py-4 bg-dark mt-auto border-top border-1 border-warning">
+        <footer class="py-4 bg-dark mt-auto border-top border-1 border-secondary">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
                     <div class="text-muted">Copyright &copy; Your Website 2023</div>

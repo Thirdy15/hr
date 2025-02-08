@@ -46,73 +46,32 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
             height: 50px;
             cursor: pointer;
         }
-        .collapse {
-            transition: width 3s ease;
-        }
-
-        #searchInput.collapsing {
-            width: 0;
-        }
-
-        #searchInput.collapse.show {
-            width: 250px; /* Adjust the width as needed */
-        }
-
-        .search-bar {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        #search-results {
-            position: absolute;
-            width: 100%;
-            z-index: 1000;
-            display: none; /* Hidden by default */
-        }
-
-        #search-results a {
-            text-decoration: none;
-        }
-
-        .form-control:focus + #search-results {
-            display: block; /* Show the results when typing */
-        }
-
     </style>
 </head>
 
 <body class="sb-nav-fixed bg-black">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-warning">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-secondary">
         <a class="navbar-brand ps-3 text-muted" href="../../employee/supervisor/dashboard.php">Employee Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
         <div class="d-flex ms-auto me-0 me-md-3 my-2 my-md-0 align-items-center">
+            <i class="fa fa-bell me-2 text-primary" style="font-size:20px;" alt="Notification Bell" onclick="showNotification()" style="width: 50px; height: 50px; cursor: pointer;"></i>
             <div class="text-light me-3 p-2 rounded shadow-sm bg-gradient" id="currentTimeContainer" 
             style="background: linear-gradient(45deg, #333333, #444444); border-radius: 5px;">
-                <span class="d-flex align-items-center">
+                <span class="d-flex align-items-center ms-2">
                     <span class="pe-2">
                         <i class="fas fa-clock"></i> 
                         <span id="currentTime">00:00:00</span>
                     </span>
-                    <button class="btn btn-outline-warning btn-sm ms-2" type="button" onclick="toggleCalendar()">
-                        <i class="fas fa-calendar-alt"></i>
+                    <button class="btn btn-outline-white btn-sm ms-2" type="button" onclick="toggleCalendar()" style="color: white; border: 2px solid var(--bs-secondary);">
+                    <i class="fas fa-calendar-alt"></i>
                         <span id="currentDate">00/00/0000</span>
                     </button>
                 </span>
             </div>
             <form class="d-none d-md-inline-block form-inline">
-            <div class="dropdown search-container" style="position: relative;">
-                <form class="d-none d-md-inline-block form-inline">
-                    <div class="input-group">
-                        <!-- Search Input -->
-                        <input class="form-control collapse" id="searchInput" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" data-bs-toggle="dropdown" aria-expanded="false" />
-                        <button class="btn btn-outline-warning rounded" id="btnNavbarSearch" type="button" data-bs-toggle="collapse" data-bs-target="#searchInput" aria-expanded="false" aria-controls="searchInput">
-                            <i id="searchIcon" class="fas fa-search"></i> <!-- Initial Icon -->
-                        </button>
-                    </div>
-                    <ul id="searchResults" class="dropdown-menu list-group mt-2 bg-transparent" style="width: 100%;"></ul>
-                </form>
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-secondary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
             </div>
             </form>
         </div>
@@ -122,9 +81,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <i class="fa fa-bell" style="font-size:20px" alt="Notification Bell" onclick="showNotification()" style="width: 50px; height: 50px; cursor: pointer;"></i> 
-        
-                         <div class="sb-sidenav-menu-heading text-center text-muted">Profile</div>  
+                          <div class="sb-sidenav-menu-heading text-center text-muted">Profile</div>  
+                         
                         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-light d-flex justify-content-center ms-4" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -134,7 +92,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                         class="rounded-circle border border-light" width="120" height="120" alt="" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="../../employee/supervisor/profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../../employee/contractual/profile.php">Profile</a></li>
                                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                     <li><hr class="dropdown-divider" /></li>
@@ -150,8 +108,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Employee Dashboard</div>
-                        <a class="nav-link text-light" href="../../employee/supervisor/dashboard.php">
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Employee Dashboard</div>
+                        <a class="nav-link text-light" href="../../employee/contractual/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>           
@@ -162,10 +120,11 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </a>
                         <div class="collapse" id="collapseTAD" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/attendance.php">Attendance Scanner</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/attendance.php">Attendance Scanner</a>
                                 <a class="nav-link text-light" href="">View Attendance Record</a>
                             </nav>
                         </div>
+                        
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLM" aria-expanded="false" aria-controls="collapseLM">
                             <div class="sb-nav-link-icon "><i class="fas fa-calendar-times"></i></div>
                             Leave Management
@@ -175,9 +134,9 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link text-light" href="../../employee/supervisor/leave_file.php">File Leave</a>
                                 <a class="nav-link text-light" href="../../employee/supervisor/leave_request.php">Leave Request</a>
-                                
                             </nav>
                         </div>
+                       
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
                             <div class="sb-nav-link-icon"><i class="fas fa-line-chart"></i></div>
                             Performance Management
@@ -185,10 +144,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/evaluation.php">View Ratings</a>
-                            </nav>
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/department.php">Department Evaluation</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/evaluation.php">Evaluation</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/department.php">Department Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -201,7 +158,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                 <a class="nav-link text-light" href="">View Your Rating</a>
                             </nav>
                         </div> 
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Feedback</div> 
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
                             Report Issue
@@ -214,7 +171,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div> 
                     </div>
                 </div>
-                <div class="sb-sidenav-footer bg-black border-top border-1 border-warning">
+                <div class="sb-sidenav-footer bg-black border-top border-1 border-secondary">
                     <div class="small text-light">Logged in as: <?php echo htmlspecialchars($employeeInfo['role']); ?></div>
                 </div>
             </nav>
@@ -235,7 +192,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                     <div class="row mb-2">
                         <div class="col-md-3 mt-2">
                             <div class="card bg-dark text-light border-0 equal-height">
-                                <div class="card-header border-bottom border-warning text-info">
+                                <div class="card-header border-bottom border-secondary text-info">
                                     <h3 class="mb-0">To Do</h3>
                                 </div>
                                 <div class="card-body">
@@ -244,7 +201,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task1">
                                                 <label class="form-check-label" for="task1">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Facial Recognition
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Facial Recognition
                                                 </label>
                                             </div>
                                         </li>
@@ -252,7 +209,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task2">
                                                 <label class="form-check-label" for="task2">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Attendance Record
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Attendance Record
                                                 </label>
                                             </div>
                                         </li>
@@ -260,7 +217,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Leave Processing
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Leave Processing
                                                 </label>
                                             </div>
                                         </li>
@@ -268,7 +225,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Performance Processing
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Performance Processing
                                                 </label>
                                             </div>
                                         </li>
@@ -276,7 +233,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Payroll Processing
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Payroll Processing
                                                 </label>
                                             </div>
                                         </li>
@@ -284,7 +241,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Social Recognition
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Social Recognition
                                                 </label>
                                             </div>
                                         </li>
@@ -294,7 +251,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div>
                         <div class="col-md-6 mt-2 mb-2">
                             <div class="card bg-dark text-light equal-height">
-                                <div class="card-header border-bottom border-1 border-warning text-info">
+                                <div class="card-header border-bottom border-1 border-secondary text-info">
                                     <h3 class="mb-0">Attendance</h3>
                                 </div>
                                 <div class="card-body p-4">
@@ -328,27 +285,27 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="col"></div> <!-- Empty for days before 1st -->
                                             <div class="col">
                                                 <span class="fw-bold">1</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">2</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">3</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">4</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">5</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">6</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                         </div>
 
@@ -356,31 +313,31 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <!-- Second week -->
                                             <div class="col">
                                                 <span class="fw-bold">7</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">8</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">9</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">10</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">11</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">12</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">13</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                         </div>
                                     </div>
@@ -389,7 +346,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div>
                         <div class="col-md-3 mt-2">
                             <div class="card bg-dark equal-height">
-                                <div class="card-header border-bottom border-1 border-warning text-info">
+                                <div class="card-header border-bottom border-1 border-secondary text-info">
                                     <h3>Performance Ratings | Graph</h3>
                                 </div>
                                 <div class="card-body">
@@ -429,7 +386,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                         </div>
                                     </div>
 
-                                    <!-- Rating 4: Punctuality -->
+                                   <!-- Rating 4: Punctuality -->
                                     <div class="mt-2">
                                         <h5 class="text-light">Punctuality</h5>
                                         <div class="d-flex justify-content-between">
@@ -459,7 +416,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                     <div class="row mb-4">
                         <div class="col-md-12 mt-2 mb-2">
                             <div class="card bg-dark text-info border-0">
-                                <div class="card-header border-bottom border-warning">
+                                <div class="card-header border-bottom border-secondary">fsadwdas
                                     <h3 class="mb-0">Top Performers | Graph</h3>
                                 </div>
                                 <div class="card-body">
@@ -529,7 +486,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div>
                     </div>
                 </div>
-            <footer class="py-4 bg-light mt-auto bg-dark border-top border-1 border-warning">
+            <footer class="py-4 bg-light mt-auto bg-dark border-top border-1 border-secondary">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2023</div>
@@ -626,7 +583,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         currentDateElement.textContent = currentDate.toLocaleDateString('en-US', options);
     }
 
-    // Update the time every second
+    // Call setCurrentTime initially and then every second
+    setCurrentTime();
     setInterval(setCurrentTime, 1000);
 
     function showNotification() {
@@ -644,59 +602,6 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         });
       }
     }
-
-    const features = [
-        { name: "Dashboard", link: "../../employee/supervisor/dashboard.php", path: "Employee Dashboard" },
-        { name: "Attendance Scanner", link: "../../employee/supervisor/attendance.php", path: "Time and Attendance/Attendance Scanner" },
-        { name: "Leave Request", link: "../../employee/supervisor/leave_request.php", path: "Leave Management/Leave Request" },
-        { name: "Evaluation Ratings", link: "../../employee/supervisor/evaluation.php", path: "Performance Management/Evaluation Ratings" },
-        { name: "File Leave", link: "../../employee/supervisor/leave_file.php", path: "Leave Management/File Leave" },
-        { name: "View Your Rating", link: "../../employee/supervisor/social_recognition.php", path: "Social Recognition/View Your Rating" },
-        { name: "Report Issue", link: "../../employee/supervisor/report_issue.php", path: "Feedback/Report Issue" }
-    ];
-
-    // Handle search input change
-    document.getElementById('searchInput').addEventListener('input', function () {
-        let input = this.value.toLowerCase();
-        let results = '';
-
-        if (input) {
-            // Filter the features based on the search input
-            const filteredFeatures = features.filter(feature => 
-                feature.name.toLowerCase().includes(input)
-            );
-
-            if (filteredFeatures.length > 0) {
-                // Generate the HTML for the filtered results
-                filteredFeatures.forEach(feature => {
-                    results += `                   
-                        <a href="${feature.link}" class="list-group-item list-group-item-action">
-                            ${feature.name}
-                            <br>
-                            <small class="text-muted">${feature.path}</small>
-                        </a>`;
-                });
-            } else {
-                // If no matches found, show "No result found"
-                results = '<li class="list-group-item list-group-item-action">No result found</li>';
-            }
-        }
-
-        // Update the search results with the filtered features
-        document.getElementById('searchResults').innerHTML = results;
-        
-        if (!input) {
-            document.getElementById('searchResults').innerHTML = ''; // Clears the dropdown if input is empty
-        }
-    });
-
-    // Handle collapse event to clear search input when hidden
-    const searchInputElement = document.getElementById('searchInput');
-    searchInputElement.addEventListener('hidden.bs.collapse', function () {
-        // Clear the search input and search results when the input collapses
-        searchInputElement.value = '';  // Clear the input
-        document.getElementById('searchResults').innerHTML = '';  // Clear the search results
-    });
 
 </script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'> </script>

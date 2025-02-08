@@ -52,7 +52,7 @@ $conn->close();
 </head>
 
 <body class="sb-nav-fixed bg-black">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark border-bottom border-1 border-warning bg-dark">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark border-bottom border-1 border-secondary bg-dark">
         <a class="navbar-brand ps-3 text-muted" href="../admin/dashboard.php">Admin Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
     
@@ -122,7 +122,7 @@ $conn->close();
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Admin Dashboard</div>
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Admin Dashboard</div>
                         <a class="nav-link text-light" href="../admin/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
@@ -171,7 +171,7 @@ $conn->close();
                                 <a class="nav-link text-light" href="../admin/recognition.php">Generate Certificate</a>
                             </nav>
                         </div>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Account Management</div>
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Account Management</div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Accounts
@@ -188,7 +188,7 @@ $conn->close();
                         </div>
                     </div>
                 </div>
-                <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-warning">
+                <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-secondary">
                     <div class="small">Logged in as: <?php echo htmlspecialchars($adminInfo['role']); ?></div>
                 </div>
             </nav>
@@ -201,7 +201,7 @@ $conn->close();
                         <!-- Move the pie chart to the left side -->
                         <div class="col-md-6 mt-2">
                             <div class="card mb-4">
-                                <div class="card-header bg-dark text-light border-bottom border-1 border-warning">
+                                <div class="card-header bg-dark text-light border-bottom border-1 border-secondary">
                                     <i class="fas fa-chart-pie me-1"></i> 
                                     <a class="text-light" href="../admin/leave_requests.php">Leave Request Status </a>
                                 </div>
@@ -212,7 +212,7 @@ $conn->close();
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="card bg-dark">
-                                <div class="card-header border-bottom border-1 border-warning text-info">
+                                <div class="card-header border-bottom border-1 border-secondary text-info">
                                     <h3>Performance Ratings | Graph</h3>
                                 </div>
                                 <div class="card-body">
@@ -281,7 +281,7 @@ $conn->close();
                         
                         <div class="col-md-12 mt-2 mb-2">
                             <div class="card bg-dark text-info border-0">
-                                <div class="card-header border-bottom border-warning">
+                                <div class="card-header border-bottom border-secondary">
                                     <h3 class="mb-0">Top Performers | Graph</h3>
                                 </div>
                                 <div class="card-body">
@@ -341,7 +341,7 @@ $conn->close();
                         
                         <div class="col-md-12 mt-2 mb-2">
                             <div class="card mb-4 bg-dark text-light">
-                                <div class="card-header border-bottom border-1 border-warning">
+                                <div class="card-header border-bottom border-1 border-secondary">
                                     <i class="fas fa-table me-1"></i>
                                     DataTable Example
                                 </div>
@@ -482,14 +482,14 @@ $conn->close();
                 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-warning">
+                            <div class="modal-header border-bottom border-secondary">
                                 <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 Are you sure you want to log out?
                             </div>
-                            <div class="modal-footer border-top border-warning">
+                            <div class="modal-footer border-top border-secondary">
                                 <button type="button" class="btn border-secondary text-light" data-bs-dismiss="modal">Cancel</button>
                                 <form action="../admin/logout.php" method="POST">
                                     <button type="submit" class="btn btn-danger">Logout</button>
@@ -498,7 +498,7 @@ $conn->close();
                         </div>
                     </div>
                 </div>  
-            <footer class="py-4 bg-dark mt-auto border-top border-1 border-warning">
+            <footer class="py-4 bg-dark mt-auto border-top border-1 border-secondary">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2023</div>

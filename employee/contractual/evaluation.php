@@ -67,8 +67,8 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="sb-nav-fixed bg-black">
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-secondary">
-        <a class="navbar-brand ps-3 text-muted" href="../../employee/supervisor/dashboard.php">Employee Portal</a>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 borders-secondary">
+        <a class="navbar-brand ps-3 text-muted" href="../../employee/contractual/dashboard.php">Employee Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
         <div class="d-flex ms-auto me-0 me-md-3 my-2 my-md-0 align-items-center">
             <i class="fa fa-bell me-2 text-primary" style="font-size:20px;" alt="Notification Bell" onclick="showNotification()" style="width: 50px; height: 50px; cursor: pointer;"></i>
@@ -79,7 +79,7 @@ $conn->close();
                         <i class="fas fa-clock"></i> 
                         <span id="currentTime">00:00:00</span>
                     </span>
-                    <button class="btn btn-outline-warning btn-sm ms-2" type="button" onclick="toggleCalendar()">
+                    <button class="btn btn-outlines-secondary btn-sm ms-2" type="button" onclick="toggleCalendar()">
                         <i class="fas fa-calendar-alt"></i>
                         <span id="currentDate">00/00/0000</span>
                     </button>
@@ -88,7 +88,7 @@ $conn->close();
                 <form class="d-none d-md-inline-block form-inline">
                     <div class="input-group">
                         <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                        <button class="btn btn-secondary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                        <button class="btn btns-secondary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                     </div>
                 </form>
             </div>
@@ -108,7 +108,7 @@ $conn->close();
                                         class="rounded-circle border border-light" width="120" height="120" alt="" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="../../employee/staff/profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../../employee/contractual/profile.php">Profile</a></li>
                                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                     <li><hr class="dropdown-divider" /></li>
@@ -136,8 +136,8 @@ $conn->close();
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Employee Dashboard</div>
-                        <a class="nav-link text-light" href="../../employee/staff/dashboard.php">
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 borders-secondary mt-3">Employee Dashboard</div>
+                        <a class="nav-link text-light" href="../../employee/contractual/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
@@ -148,20 +148,11 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseTAD" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/attendance.php">Attendance Scanner</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/attendance.php">Attendance Scanner</a>
                                 <a class="nav-link text-light" href="">Timesheet</a>
                             </nav>
                         </div>
-                        <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLM" aria-expanded="false" aria-controls="collapseLM">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-times"></i></div>
-                            Leave Management
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/staff/leave_request.php">File Leave</a>
-                            </nav>
-                        </div>
+                       
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
                             <div class="sb-nav-link-icon"><i class="fas fa-line-chart"></i></div>
                             Performance Management
@@ -169,8 +160,8 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/staff/evaluation.php">View Ratings</a>
-                            <a class="nav-link text-light" href="../../employee/staff/department.php">Department Evaluation</a>
+                            <a class="nav-link text-light" href="../../employee/contractual/evaluation.php">View Ratings</a>
+                            <a class="nav-link text-light" href="../../employee/contractual/department.php">Department Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -180,10 +171,10 @@ $conn->close();
                         </a>
                         <div class="collapse" id="collapseSR" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/staff/awardee.php">Awardee</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/awardee.php">Awardee</a>
                             </nav>
                         </div>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Feedback</div> 
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 borders-secondary mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
                             Report Issue
@@ -196,7 +187,7 @@ $conn->close();
                         </div> 
                     </div>
                 </div>
-                <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-secondary">
+                <div class="sb-sidenav-footer bg-black text-light border-top border-1 borders-secondary">
                     <div class="small">Logged in as: <?php echo htmlspecialchars($employeeInfo['role']); ?></div>
                 </div>
             </nav>
@@ -257,14 +248,14 @@ $conn->close();
                 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-secondary">
+                            <div class="modal-header border-bottom borders-secondary">
                                 <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 Are you sure you want to log out?
                             </div>
-                            <div class="modal-footer border-top border-secondary">
+                            <div class="modal-footer border-top borders-secondary">
                                 <button type="button" class="btn border-secondary text-light" data-bs-dismiss="modal">Cancel</button>
                                 <form action="../../employee/logout.php" method="POST">
                                     <button type="submit" class="btn btn-danger">Logout</button>
@@ -273,7 +264,7 @@ $conn->close();
                         </div>
                     </div>
                 </div>  
-            <footer class="py-4 bg-dark text-light mt-auto border-top border-secondary">
+            <footer class="py-4 bg-dark text-light mt-auto border-top borders-secondary">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2024</div>

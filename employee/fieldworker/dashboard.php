@@ -50,19 +50,20 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
 </head>
 
 <body class="sb-nav-fixed bg-black">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-warning">
-        <a class="navbar-brand ps-3 text-muted" href="../../employee/fieldworker/dashboard.php">Employee Portal</a>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-secondary">
+        <a class="navbar-brand ps-3 text-muted" href="../../employee/supervisor/dashboard.php">Employee Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
         <div class="d-flex ms-auto me-0 me-md-3 my-2 my-md-0 align-items-center">
+            <i class="fa fa-bell me-2 text-primary" style="font-size:20px;" alt="Notification Bell" onclick="showNotification()" style="width: 50px; height: 50px; cursor: pointer;"></i>
             <div class="text-light me-3 p-2 rounded shadow-sm bg-gradient" id="currentTimeContainer" 
             style="background: linear-gradient(45deg, #333333, #444444); border-radius: 5px;">
-                <span class="d-flex align-items-center">
+                <span class="d-flex align-items-center ms-2">
                     <span class="pe-2">
                         <i class="fas fa-clock"></i> 
                         <span id="currentTime">00:00:00</span>
                     </span>
-                    <button class="btn btn-outline-warning btn-sm ms-2" type="button" onclick="toggleCalendar()">
-                        <i class="fas fa-calendar-alt"></i>
+                    <button class="btn btn-outline-white btn-sm ms-2" type="button" onclick="toggleCalendar()" style="color: white; border: 2px solid var(--bs-secondary);">
+                    <i class="fas fa-calendar-alt"></i>
                         <span id="currentDate">00/00/0000</span>
                     </button>
                 </span>
@@ -70,7 +71,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
             <form class="d-none d-md-inline-block form-inline">
             <div class="input-group">
                 <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                <button class="btn btn-warning" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                <button class="btn btn-secondary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
             </div>
             </form>
         </div>
@@ -80,8 +81,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                     <img id="notifyIcon" src="../../img/notif.png" alt="Notification Bell" onclick="showNotification()" style="width: 50px; height: 50px; cursor: pointer;">
-                         <div class="sb-sidenav-menu-heading text-center text-muted">Profile</div>  
+                          <div class="sb-sidenav-menu-heading text-center text-muted">Profile</div>  
+                         
                         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-light d-flex justify-content-center ms-4" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,7 +92,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                         class="rounded-circle border border-light" width="120" height="120" alt="" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="../../employee/fieldworker/profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../../employee/contractual/profile.php">Profile</a></li>
                                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                     <li><hr class="dropdown-divider" /></li>
@@ -107,8 +108,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Employee Dashboard</div>
-                        <a class="nav-link text-light" href="../../employee/fieldworker/dashboard.php">
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Employee Dashboard</div>
+                        <a class="nav-link text-light" href="../../employee/contractual/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>           
@@ -119,10 +120,11 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </a>
                         <div class="collapse" id="collapseTAD" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/fieldworker/attendance.php">Attendance Scanner</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/attendance.php">Attendance Scanner</a>
                                 <a class="nav-link text-light" href="">View Attendance Record</a>
                             </nav>
                         </div>
+                        <!--
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLM" aria-expanded="false" aria-controls="collapseLM">
                             <div class="sb-nav-link-icon "><i class="fas fa-calendar-times"></i></div>
                             Leave Management
@@ -130,10 +132,11 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </a>
                         <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/filedworker/leave_file.php">File Leave</a>
-                                <a class="nav-link text-light" href="../../employee/fieldworker/leave_request.php">Leave Request</a>
+                                <a class="nav-link text-light" href="../../employee/supervisor/leave_file.php">File Leave</a>
+                                <a class="nav-link text-light" href="../../employee/supervisor/leave_request.php">Leave Request</a>
                             </nav>
                         </div>
+                        -->
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
                             <div class="sb-nav-link-icon"><i class="fas fa-line-chart"></i></div>
                             Performance Management
@@ -141,8 +144,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/fieldworker/evaluation.php">View Ratings</a>
-                                <a class="nav-link text-light" href="../../employee/fieldworker/department.php">Department Evaluation</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/evaluation.php">Evaluation</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/department.php">Department Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -155,7 +158,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                 <a class="nav-link text-light" href="">View Your Rating</a>
                             </nav>
                         </div> 
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Feedback</div> 
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
                             Report Issue
@@ -168,7 +171,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div> 
                     </div>
                 </div>
-                <div class="sb-sidenav-footer bg-black border-top border-1 border-warning">
+                <div class="sb-sidenav-footer bg-black border-top border-1 border-secondary">
                     <div class="small text-light">Logged in as: <?php echo htmlspecialchars($employeeInfo['role']); ?></div>
                 </div>
             </nav>
@@ -189,7 +192,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                     <div class="row mb-2">
                         <div class="col-md-3 mt-2">
                             <div class="card bg-dark text-light border-0 equal-height">
-                                <div class="card-header border-bottom border-warning text-info">
+                                <div class="card-header border-bottom border-secondary text-info">
                                     <h3 class="mb-0">To Do</h3>
                                 </div>
                                 <div class="card-body">
@@ -198,7 +201,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task1">
                                                 <label class="form-check-label" for="task1">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Facial Recognition
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Facial Recognition
                                                 </label>
                                             </div>
                                         </li>
@@ -206,7 +209,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task2">
                                                 <label class="form-check-label" for="task2">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Attendance Record
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Attendance Record
                                                 </label>
                                             </div>
                                         </li>
@@ -214,7 +217,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Leave Processing
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Leave Processing
                                                 </label>
                                             </div>
                                         </li>
@@ -222,7 +225,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Performance Processing
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Performance Processing
                                                 </label>
                                             </div>
                                         </li>
@@ -230,7 +233,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Payroll Processing
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Payroll Processing
                                                 </label>
                                             </div>
                                         </li>
@@ -238,7 +241,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="task3">
                                                 <label class="form-check-label" for="task3">
-                                                    <i class="bi bi-check-circle text-warning me-2"></i>Social Recognition
+                                                    <i class="bi bi-check-circle text-secondary me-2"></i>Social Recognition
                                                 </label>
                                             </div>
                                         </li>
@@ -248,7 +251,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div>
                         <div class="col-md-6 mt-2 mb-2">
                             <div class="card bg-dark text-light equal-height">
-                                <div class="card-header border-bottom border-1 border-warning text-info">
+                                <div class="card-header border-bottom border-1 border-secondary text-info">
                                     <h3 class="mb-0">Attendance</h3>
                                 </div>
                                 <div class="card-body p-4">
@@ -282,27 +285,27 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <div class="col"></div> <!-- Empty for days before 1st -->
                                             <div class="col">
                                                 <span class="fw-bold">1</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">2</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">3</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">4</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">5</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">6</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                         </div>
 
@@ -310,31 +313,31 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                             <!-- Second week -->
                                             <div class="col">
                                                 <span class="fw-bold">7</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">8</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">9</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">10</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">11</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">12</span>
-                                                <div class="text-danger">Absent</div>
+                                                <div class="text-secondary">Absent</div>
                                             </div>
                                             <div class="col">
                                                 <span class="fw-bold">13</span>
-                                                <div class="text-success">Present</div>
+                                                <div class="text-secondary">Present</div>
                                             </div>
                                         </div>
                                     </div>
@@ -343,7 +346,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div>
                         <div class="col-md-3 mt-2">
                             <div class="card bg-dark equal-height">
-                                <div class="card-header border-bottom border-1 border-warning text-info">
+                                <div class="card-header border-bottom border-1 border-secondary text-info">
                                     <h3>Performance Ratings | Graph</h3>
                                 </div>
                                 <div class="card-body">
@@ -483,7 +486,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </div>
                     </div>
                 </div>
-            <footer class="py-4 bg-light mt-auto bg-dark border-top border-1 border-warning">
+            <footer class="py-4 bg-light mt-auto bg-dark border-top border-1 border-secondary">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2023</div>
@@ -579,6 +582,10 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         currentDateElement.textContent = currentDate.toLocaleDateString('en-US', options);
     }
+
+    // Call setCurrentTime initially and then every second
+    setCurrentTime();
+    setInterval(setCurrentTime, 1000);
 
     function showNotification() {
       if (Notification.permission === "granted") {

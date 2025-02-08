@@ -17,14 +17,14 @@ if (isset($_SESSION['update_success'])) {
 $employeeId = $_SESSION['e_id'];
 $sql = "SELECT 
     e.e_id, e.firstname, e.middlename, e.lastname, e.birthdate, e.email, e.created_at,
-    e.role, e.position, e.department, e.phone_number, e.address, e.pfp, 
+    e.role, e.position, e.department, e.phone_number, e.address, e.pfp, e.gender, 
     ua.login_time, 
     -- Fetch the last valid logout time
     (SELECT ua2.logout_time 
      FROM user_activity ua2 
      WHERE ua2.user_id = e.e_id 
      AND ua2.logout_time IS NOT NULL 
-     ORDER BY ua2.logout_time ASC 
+     ORDER BY ua2.logout_time DESC 
      LIMIT 1) AS last_logout_time
 FROM 
     employee_register e
@@ -35,8 +35,6 @@ WHERE
 ORDER BY 
     ua.login_time DESC 
 LIMIT 1";
-
-
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $employeeId);
@@ -52,23 +50,9 @@ if ($result->num_rows > 0) {
 $stmt->close();
 $conn->close();
 
-// Generate QR Code content
-$qrData = 'Employee ID: ' . $employeeInfo['e_id'] . ' | Email: ' . $employeeInfo['email'];
 
-$qrCodeDir = '../qrcodes/';
-if (!is_dir($qrCodeDir)) {
-    mkdir($qrCodeDir, 0755, true); // Create the directory if it doesn't exist
-}
-
-// Path to store the generated QR Code image
-$qrImagePath = '../qrcodes/employee_' . $employeeId . '.png';
-
-// Generate QR Code and save it as a PNG image
-QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
 
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -86,7 +70,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="sb-nav-fixed bg-black">
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-warning">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-secondary">
         <a class="navbar-brand ps-3 text-muted" href="../../employee/supervisor/dashboard.php">Employee Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
         <div class="d-flex ms-auto me-0 me-md-3 my-2 my-md-0 align-items-center">
@@ -128,7 +112,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                                 class="rounded-circle border border-light" width="120" height="120" alt="" />
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                            <li><a class="dropdown-item" href="../../employee/supervisor/profile.php">Profile</a></li>
+                                            <li><a class="dropdown-item" href="../../employee/contractual/profile.php">Profile</a></li>
                                             <li><a class="dropdown-item" href="#!">Settings</a></li>
                                             <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                             <li><hr class="dropdown-divider" /></li>
@@ -157,8 +141,8 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                     </li>
                                 </ul>
                             </div>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Employee Dashboard</div>
-                        <a class="nav-link text-light" href="../../employee/supervisor/dashboard.php">
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Employee Dashboard</div>
+                        <a class="nav-link text-light" href="../../employee/contractual/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
@@ -169,19 +153,8 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                         </a>
                         <div class="collapse" id="collapseTAD" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/attendance.php">Attendance Scanner</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/attendance.php">Attendance Scanner</a>
                                 <a class="nav-link text-light" href="">Timesheet</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLM" aria-expanded="false" aria-controls="collapseLM">
-                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-times"></i></div>
-                            Leave Management
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/supervisor/leave_file.php">File Leave</a>
-                            <a class="nav-link text-light" href="../../employee/supervisor/leave_request.php">Endorse Leave</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
@@ -191,7 +164,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link text-light" href="../../employee/supervisor/evaluation.php">Evaluation</a>
+                            <a class="nav-link text-light" href="../../employee/contractual/evaluation.php">Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -201,10 +174,10 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                         </a>
                         <div class="collapse" id="collapseSR" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/supervisor/recognitions.php">View Your Rating</a>
+                                <a class="nav-link text-light" href="../../employee/contractual/awardee.php">View Your Rating</a>
                             </nav>
                         </div>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Feedback</div> 
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
                             Report Issue
@@ -217,7 +190,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                         </div> 
                     </div>
                 </div>
-                <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-warning">
+                <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-secondary">
                     <div class="small">Logged in as: <?php echo htmlspecialchars($employeeInfo['role']); ?></div>
                 </div>
             </nav>
@@ -234,11 +207,11 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                             </div>
                         </div>
                     </div>
-                    <h1 class="big mb-2 text-light">Profile</h1>
+                    <h1 class="big mb-2 text-light">My Profile</h1>
                     <div class="row mt-4">
                         <div class="col-md-12">
                             <div class="card mb-4">
-                                <div class="card-header bg-dark border-1 border-bottom border-warning text-light">
+                                <div class="card-header bg-dark border-1 border-bottom border-secondary text-light">
                                     <h3 class="card-title text-start">User Information</h3>
                                 </div>
                                 <div class="card-body bg-dark">
@@ -270,10 +243,14 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-center align-items-center mt-4 mb-3">
-                                                <button class="btn btn-light text-center" type="button" id="editPictureDropdown" 
-                                                    data-bs-toggle="dropdown" aria-expanded="false"> Edit Profile
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
+                                            <button class="btn btn-light text-center w-30 h-50" type="button" id="editPictureDropdown" 
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 2048 2048">
+                                                <path fill="currentColor" d="M1468 1139q-52 43-89 96q-83-42-173-62t-184-21q-108 0-206 27t-184 76t-154 119t-119 155t-76 185t-27 206H128q0-146 43-281t124-247t193-196t254-129q-54-36-96-83t-72-102t-46-116t-16-126q0-106 40-199t110-162t163-110t199-41t199 40t162 110t110 163t41 199q0 65-16 126t-45 117t-73 102t-97 83q43 14 83 31t80 40M640 640q0 80 30 149t82 122t122 83t150 30q79 0 149-30t122-82t83-122t30-150q0-79-30-149t-82-122t-123-83t-149-30q-80 0-149 30t-122 82t-83 123t-30 149m1090 511q66 0 125 25t102 69t69 102t26 125q0 66-25 124t-69 102t-103 69t-125 26q-97 0-177-54l-292 292q-19 19-45 19t-45-19t-19-45t19-45l292-292q-54-80-54-177q0-66 25-124t69-102t102-69t125-26m0 514q40 0 75-15t61-41t42-62t16-75q0-40-15-75t-42-61t-61-42t-76-15q-40 0-75 15t-61 42t-42 61t-15 75q0 40 15 75t41 61t62 42t75 15"/>
+                                            </svg>
+                                                 </button>
+
+
                                                 <div class="dropdown">
                                                     <ul class="dropdown-menu" aria-labelledby="editPictureDropdown">
                                                         <li>
@@ -292,11 +269,11 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                         <div class="col-xl-10 mb-4">
                                             <div class="">
                                                 <div class="d-flex justify-content-start">
-                                                    <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#qrCodeModal">Show QR Code</button>
-                                                    <a href="../../employee/supervisor/change_pass.php" class="btn btn-primary"> Change password </a>
+                                                    <button type="button" class="btn btn-primary btn-sm me-2"style="margin-left: 3rem;" data-bs-toggle="modal" data-bs-target="#qrCodeModal">Show QR Code</button>
+                                                    <a href="../../employee/contractual/change_pass.php" class="btn btn-primary"> Change password </a>
                                                 </div>
                                             </div>
-                                            <div class="mt-3">
+                                            <div class="mt-3" style="margin-left: 3rem;">
                                                 <div class="form-group row">
                                                     <div class="col-sm-6 bg-dark form-floating mb-3">
                                                         <input class="form-control fw-bold" name="fname" value="<?php echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['middlename'] . ' ' . $employeeInfo['lastname']); ?>" readonly>
@@ -309,7 +286,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-3">
+                                            <div class="mt-3" style="margin-left: 3rem;">
                                                 <div class="form-group row">
                                                     <div class="col-sm-6 bg-dark form-floating mb-3">
                                                         <input class="form-control fw-bold" name="position" value="<?php echo htmlspecialchars($employeeInfo['position']); ?>" readonly>
@@ -322,11 +299,15 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-3">
+                                            <div class="mt-3" style="margin-left: 3rem;">
                                                 <div class="form-group row">
                                                     <div class="col-sm-12 bg-dark form-floating mb-3">
                                                         <input class="form-control fw-bold" name="email" value="<?php echo htmlspecialchars($employeeInfo['email']); ?>" readonly>
                                                         <label class="fw-bold">Email:</label>
+                                                    </div>
+                                                    <div class="col-sm-12 bg-dark form-floating mb-3">
+                                                        <input class="form-control fw-bold" name="gender" value="<?php echo htmlspecialchars($employeeInfo['gender']); ?>" readonly>
+                                                        <label class="fw-bold">Gender:</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -336,7 +317,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                             <h3 class="card-title text-center">Edit Information</h3>
                                         </div>
                                         <div class="card-body bg-dark">
-                                            <form id="infoForm" action="../../employee_db/supervisor/update_profile.php" method="post">
+                                            <form id="infoForm" action="../../employee_db/contractual/update_profile.php" method="post">
                                                 <div class="row mb-3">
                                                     <div class="col-sm-4 bg-dark form-floating mb-3">
                                                         <input type="text" class="form-control fw-bold" id="inputfName" name="firstname" value="<?php echo htmlspecialchars($employeeInfo['firstname']); ?>" readonly required>
@@ -371,14 +352,14 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                                                         <label for="inputAddress" class="fw-bold">Address:</label>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-end">
+                                                <div class="d-flex justify-content-between">
+                                                    <button type="submit" class="btn btn-primary d-none">Save Changes</button>
                                                     <button type="button" id="editButton" class="btn btn-primary">Update Information</button>
-                                                    <button type="button" class="btn btn-primary d-none ms-2" id="saveButton" data-bs-toggle="modal" data-bs-target="#saveChangesModal">Save Changes</button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
-                                    <form action="../../employee_db/supervisor/update_employee_pfp.php" method="post" enctype="multipart/form-data" id="profilePictureForm" style="display:none;">
+                                    <form action="../../employee_db/contractual/update_employee_pfp.php" method="post" enctype="multipart/form-data" id="profilePictureForm" style="display:none;">
                                         <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*" onchange="showConfirmationModal();">
                                     </form>
                                     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
@@ -410,7 +391,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                     </div>
                     <div class="col-xl-4 mb-4">
                         <div class="card bg-dark text-light">
-                            <div class="card-header border-bottom border-warning">
+                            <div class="card-header border-bottom border-secondary">
                                 <h3 class="mb-0">User Activity</h3>
                             </div>
                             <div class="card-body">
@@ -443,14 +424,17 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                 <div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header boder-1 border-warning">
-                                <h5 class="modal-title" id="qrCodeModalLabel">QR Code</h5>
+                            <div class="modal-header boder-1 border-secondary">
+                                <h5 class="modal-title" id="qrCodeModalLabel">Employee QR Code</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body text-center">
-                                <img src="<?php echo $qrImagePath; ?>" alt="QR Code" class="img-fluid rounded border border-light" width="300">
+                                <img src="<?php echo $qrImagePath; ?>" alt="QR Code" class="img-fluid border border-light" width="200">
+                                <hr>
+                                <p class="mt-3 text-start">Employee ID: <?php echo htmlspecialchars($employeeInfo['e_id']); ?></p>
+                                <p class="text-start">Name: <?php echo htmlspecialchars($employeeInfo['firstname'] . ' ' . $employeeInfo['middlename'] . ' ' . $employeeInfo['lastname']); ?></p>
                             </div>
-                            <div class="modal-footer boder-1 border-warning">
+                            <div class="modal-footer boder-1 border-secondary">
                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -459,14 +443,14 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-warning">
+                            <div class="modal-header border-bottom border-secondary">
                                 <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 Are you sure you want to log out?
                             </div>
-                            <div class="modal-footer border-top border-warning">
+                            <div class="modal-footer border-top border-secondary">
                                 <button type="button" class="btn border-secondary text-light" data-bs-dismiss="modal">Cancel</button>
                                 <form action="../../employee/logout.php" method="POST">
                                     <button type="submit" class="btn btn-danger">Logout</button>
@@ -478,15 +462,15 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                 <div class="modal fade" id="deleteProfilePictureModal" tabindex="-1" aria-labelledby="deleteProfilePictureLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-warning">
+                            <div class="modal-header border-bottom border-secondary">
                                 <h5 class="modal-title" id="deleteProfilePictureLabel">Delete Profile Picture</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body text-start">
                                 <p>Are you sure you want to delete your profile picture?</p>
                             </div>
-                            <div class="modal-footer border-top border-warning">
-                                <form action="../../employee_db/supervisor/delete_employee_pfp.php" method="post">
+                            <div class="modal-footer border-top border-secondary">
+                                <form action="../../employee_db/contractual/delete_employee_pfp.php" method="post">
                                     <input type="hidden" name="employeeId" value="<?php echo $employeeInfo['e_id']; ?>">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -495,24 +479,7 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="saveChangesModal" tabindex="-1" aria-labelledby="saveChangesModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content bg-dark text-light">
-                            <div class="modal-header boder-bottom border-warning">
-                                <h5 class="modal-title" id="saveChangesModalLabel">Confirm Save</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Are you sure you want to save the changes to your information?
-                            </div>
-                            <div class="modal-footer boder-bottom border-warning">
-                                <button type="button" class="btn btn-outline-secondary text-light" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary" id="confirmSave">Save Changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <footer class="py-4 bg-dark text-light mt-auto border-top border-warning">
+            <footer class="py-4 bg-dark text-light mt-auto border-top border-secondary">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2024</div>
@@ -634,14 +601,6 @@ QRcode::png($qrData, $qrImagePath, QR_ECLEVEL_L, 4);
             myModal.show();
         <?php endif; ?>
     });
-
-
-//SAVE CHANGES (MODAL)
-    document.getElementById('confirmSave').addEventListener('click', function() {
-    // Add your form submission logic here
-    document.getElementById('infoForm').submit(); // Submit the form
-});
-//END
 </script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'> </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

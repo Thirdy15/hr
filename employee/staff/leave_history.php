@@ -160,7 +160,14 @@ function calculateLeaveDays($start_date, $end_date) {
             <h1 class="h3">Leave History</h1>
             <div>
                 <button class="btn btn-dark" onclick="window.location.href='leave_request.php'">Back</button> <!-- Navigate to leave_request page -->
-                <button class="btn btn-dark">Export</button>
+                <form method="POST" action="export_leave_history.php" style="display:inline;">
+                    <input type="hidden" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>">
+                    <input type="hidden" name="fromDate" value="<?php echo htmlspecialchars($fromDate); ?>">
+                    <input type="hidden" name="toDate" value="<?php echo htmlspecialchars($toDate); ?>">
+                    <input type="hidden" name="statusFilter" value="<?php echo htmlspecialchars($statusFilter); ?>">
+                    <input type="hidden" name="timeFrame" value="<?php echo htmlspecialchars($timeFrame); ?>">
+                    <button type="submit" class="btn btn-dark">Export</button>
+                </form>
             </div>
         </div>
 

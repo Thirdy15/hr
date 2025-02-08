@@ -113,13 +113,14 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
 </head>
 
 <body class="sb-nav-fixed bg-black sb-sidenav-toggled">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-warning">
-        <a class="navbar-brand ps-3 text-muted" href="../../employee/staff/dashboard.php">Employee Portal</a>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark border-bottom border-1 border-secondary">
+        <a class="navbar-brand ps-3 text-muted" href="../../employee/supervisor/dashboard.php">Employee Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
         <div class="d-flex ms-auto me-0 me-md-3 my-2 my-md-0 align-items-center">
+            <i class="fa fa-bell me-2 text-primary" style="font-size:20px;" alt="Notification Bell" onclick="showNotification()" style="width: 50px; height: 50px; cursor: pointer;"></i>
             <div class="text-light me-3 p-2 rounded shadow-sm bg-gradient" id="currentTimeContainer" 
             style="background: linear-gradient(45deg, #333333, #444444); border-radius: 5px;">
-                <span class="d-flex align-items-center">
+                <span class="d-flex align-items-center ms-2">
                     <span class="pe-2">
                         <i class="fas fa-clock"></i> 
                         <span id="currentTime">00:00:00</span>
@@ -179,7 +180,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Employee Dashboard</div>
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Employee Dashboard</div>
                         <a class="nav-link text-light" href="../../employee/staff/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
@@ -229,7 +230,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
                                 <a class="nav-link text-light" href="">View Your Rating</a>
                             </nav>
                         </div> 
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Feedback</div> 
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
                             Report Issue
@@ -242,7 +243,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
                         </div> 
                     </div>
                 </div>
-                <div class="sb-sidenav-footer bg-black border-top border-1 border-warning">
+                <div class="sb-sidenav-footer bg-black border-top border-1 border-secondary">
                     <div class="small text-light">Logged in as: <?php echo htmlspecialchars($employeeInfo['role']); ?></div>
                 </div>
             </nav>
@@ -263,7 +264,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
                     </div>
                     <div class="py-4"></div>
                     <div class="card mb-4 bg-dark text-light">
-                        <div class="card-header border-bottom border-1 border-warning">
+                        <div class="card-header border-bottom border-1 border-secondary">
                             <i class="fas fa-table me-1"></i>
                             Department Employees
                         </div>
@@ -327,7 +328,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
                     </div>
                 </div>
             </div>
-            <footer class="py-4 bg-light mt-auto bg-dark border-top border-1 border-warning">
+            <footer class="py-4 bg-light mt-auto bg-dark border-top border-1 border-secondary">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2023</div>

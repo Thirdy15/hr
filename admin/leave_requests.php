@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
 </head>
 
 <body class="sb-nav-fixed bg-black">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark border-bottom border-1 border-warning bg-dark">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark border-bottom border-1 border-secondary bg-dark">
         <a class="navbar-brand ps-3 text-muted" href="../admin/dashboard.php">Admin Portal</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars text-light"></i></button>
     
@@ -258,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Admin Dashboard</div>
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Admin Dashboard</div>
                         <a class="nav-link text-light" href="../admin/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
@@ -306,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                               <a class="nav-link text-light" href="../admin/recognition.php">Generate Certificate</a>
                             </nav>
                         </div>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-warning mt-3">Account Management</div>
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Account Management</div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Accounts
@@ -323,7 +323,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                         </div>
                     </div>
                 </div>
-                <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-warning">
+                <div class="sb-sidenav-footer bg-black text-light border-top border-1 border-secondary">
                     <div class="small">Logged in as: <?php echo htmlspecialchars($adminInfo['role']); ?></div>
                 </div>
             </nav>
@@ -367,7 +367,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                     </div>
 
                     <div class="card mb-4 bg-dark text-light">
-                        <div class="card-header border-bottom border-1 border-warning">
+                        <div class="card-header border-bottom border-1 border-secondary">
                             <i class="fas fa-table me-1"></i>
                             Pending Request
                         </div>
@@ -432,7 +432,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                                             <div class="modal fade" id="proofModal<?php echo $row['proof']; ?>" tabindex="-1" aria-labelledby="proofModalLabel<?php echo $row['proof']; ?>" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content bg-dark text-light" style="width: 600px; height: 500px;">
-                                                        <div class="modal-header border-bottom border-warning">
+                                                        <div class="modal-header border-bottom border-secondary">
                                                             <h5 class="modal-title" id="proofModalLabel<?php echo $row['proof']; ?>">Proof of Leave</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
@@ -491,7 +491,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                                                             </button>
                                                         <?php endif; ?>
 
-                                                        <div class="modal-footer border-top border-warning">
+                                                        <div class="modal-footer border-top border-secondary">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
@@ -520,7 +520,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                     <div class="modal fade" id="setLeaveModal" tabindex="-1" aria-labelledby="setLeaveModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content bg-dark">
-                                <div class="modal-header border-bottom border-warning">
+                                <div class="modal-header border-bottom border-secondary">
                                     <h5 class="modal-title text-light" id="setLeaveModalLabel">Set Leave Allocations</h5>
                                     <button type="button" class="close text-light bg-dark" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -549,7 +549,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                                         <button type="submit" class="btn btn-primary mt-3">Set Allocations</button>
                                     </form>
                                 </div>
-                                <div class="modal-footer border-top border-warning">
+                                <div class="modal-footer border-top border-secondary">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
@@ -561,7 +561,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                 <div class="modal fade" id="convertLeaveModal" tabindex="-1" aria-labelledby="convertLeaveModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-warning">
+                            <div class="modal-header border-bottom border-secondary">
                                 <h5 class="modal-title" id="convertLeaveModalLabel">Convert Your Leave Days to Money</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -594,7 +594,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="modal-footer border-top border-warning">
+                            <div class="modal-footer border-top border-secondary">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -606,14 +606,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                 <div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmActionModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-warning">
+                            <div class="modal-header border-bottom border-secondary">
                                 <h5 class="modal-title" id="confirmActionModalLabel">Confirm Action</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <p id="confirmActionMessage"></p>
                             </div>
-                            <div class="modal-footer border-top border-warning">
+                            <div class="modal-footer border-top border-secondary">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn btn-primary" id="confirmActionButton">Confirm</button>
                             </div>
@@ -626,14 +626,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-dark text-light">
-                            <div class="modal-header border-bottom border-warning">
+                            <div class="modal-header border-bottom border-secondary">
                                 <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 Are you sure you want to log out?
                             </div>
-                            <div class="modal-footer border-top border-warning">
+                            <div class="modal-footer border-top border-secondary">
                                 <button type="button" class="btn border-secondary text-light" data-bs-dismiss="modal">Cancel</button>
                                 <form action="../admin/logout.php" method="POST">
                                     <button type="submit" class="btn btn-danger">Logout</button>
@@ -642,7 +642,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['employee_leaves']) &&
                         </div>
                     </div>
                 </div>  
-            <footer class="py-4 bg-dark text-light mt-auto border-top border-warning">
+            <footer class="py-4 bg-dark text-light mt-auto border-top border-secondary">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2024</div>
