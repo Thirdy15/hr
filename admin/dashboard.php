@@ -136,6 +136,7 @@ $conn->close();
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link text-light" href="../admin/attendance.php">Attendance</a>
                                 <a class="nav-link text-light" href="../admin/timesheet.php">Timesheet</a>
+                                <a class="nav-link text-light" href="../admin/no_work.php">No Work Days</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLM" aria-expanded="false" aria-controls="collapseLM">

@@ -124,7 +124,7 @@ function calculateLeaveDays($start_date, $end_date) {
     <style>
         body {
             background-color: #000;
-            color: #fff;
+            color: black;
         }
         .table-dark {
             background-color: #343a40;
@@ -156,20 +156,21 @@ function calculateLeaveDays($start_date, $end_date) {
 <body>
     <div class="container mt-5">
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">Leave History</h1>
-            <div>
-                <button class="btn btn-dark" onclick="window.location.href='leave_request.php'">Back</button> <!-- Navigate to leave_request page -->
-                <form method="POST" action="export_leave_history.php" style="display:inline;">
-                    <input type="hidden" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>">
-                    <input type="hidden" name="fromDate" value="<?php echo htmlspecialchars($fromDate); ?>">
-                    <input type="hidden" name="toDate" value="<?php echo htmlspecialchars($toDate); ?>">
-                    <input type="hidden" name="statusFilter" value="<?php echo htmlspecialchars($statusFilter); ?>">
-                    <input type="hidden" name="timeFrame" value="<?php echo htmlspecialchars($timeFrame); ?>">
-                    <button type="submit" class="btn btn-dark">Export</button>
-                </form>
-            </div>
-        </div>
+        <div class="d-flex justify-content-between align-items-center mb-4" style="color: white;">
+    <h1 class="h3">Leave History</h1>
+    <div>
+        <button class="btn btn-dark" onclick="window.location.href='leave_request.php'">Back</button> <!-- Navigate to leave_request page -->
+        <form method="POST" action="export_leave_history.php" style="display:inline;">
+            <input type="hidden" name="searchTerm" value="<?php echo htmlspecialchars($searchTerm); ?>">
+            <input type="hidden" name="fromDate" value="<?php echo htmlspecialchars($fromDate); ?>">
+            <input type="hidden" name="toDate" value="<?php echo htmlspecialchars($toDate); ?>">
+            <input type="hidden" name="statusFilter" value="<?php echo htmlspecialchars($statusFilter); ?>">
+            <input type="hidden" name="timeFrame" value="<?php echo htmlspecialchars($timeFrame); ?>">
+            <button type="submit" class="btn btn-dark">Export</button>
+        </form>
+    </div>
+</div>
+
 
         <!-- Filters -->
         <div class="card mb-4">

@@ -88,10 +88,6 @@ th, td {
     border-bottom: 1px solid #ddd;
 }
 
-tr:hover {
-    background-color: #f1f1f1;
-}
-
 .actions button {
     background-color: #f44336;
     color: white;
@@ -110,4 +106,44 @@ footer {
     color: white;
     text-align: center;
     padding: 15px 0;
+}
+
+#calendar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.month {
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
+}
+
+.days {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.day {
+    border: 1px solid #ccc;
+    margin: 2px;
+    padding: 5px;
+    width: 30px;
+    text-align: center;
+}
+
+#calendar .calendar-header button {
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+}
+
+#calendar-table td {
+    padding: 0.5rem;
+    cursor: default;
+}
+#calendar-table td button {
+    font-weight: lighter;
+    color: #ddd; /* Lighter color for text */
 }

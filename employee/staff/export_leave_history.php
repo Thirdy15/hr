@@ -87,29 +87,7 @@ if (!$stmt->execute()) {
 
 $result = $stmt->get_result();
 
-// Generate CSV file
-header('Content-Type: text/csv');
-header('Content-Disposition: attachment;filename=leave_history.csv');
-
-$output = fopen('php://output', 'w');
-fputcsv($output, ['Date Applied', 'Employee ID', 'Employee Name', 'Leave Dates', 'Leave Type', 'Total Leave Days', 'Status', 'Supervisor']);
-
-while ($row = $result->fetch_assoc()) {
-    $leave_days = calculateLeaveDays($row['start_date'], $row['end_date']);
-    fputcsv($output, [
-        date("F j, Y", strtotime($row['created_at'])) . ' | ' . date("g:i A", strtotime($row['created_at'])),
-        $row['e_id'],
-        $row['firstname'] . ' ' . $row['lastname'],
-        date("F j, Y", strtotime($row['start_date'])) . ' | ' . date("F j, Y", strtotime($row['end_date'])),
-        $row['leave_type'],
-        $leave_days . ' day/s',
-        $row['status'],
-        $row['supervisor_firstname'] . ' ' . $row['supervisor_lastname']
-    ]);
-}
-
-fclose($output);
-
+// Calculate total leave days excluding Sundays and holidays
 function calculateLeaveDays($start_date, $end_date) {
     $leave_days = 0;
     $current_date = strtotime($start_date);
@@ -124,4 +102,55 @@ function calculateLeaveDays($start_date, $end_date) {
     }
     return $leave_days;
 }
+
+// Set headers to force download
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename="leave_history.xls"');
+header('Cache-Control: max-age=0');
+
+// Start output buffering
+ob_start();
+?>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Date Applied</th>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Leave Dates</th>
+            <th>Leave Type</th>
+            <th>Total Leave Days</th>
+            <th>Status</th>
+            <th>Supervisor</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php if ($result->num_rows > 0): ?>
+        <?php while ($row = $result->fetch_assoc()): ?>
+            <?php
+                $leave_days = calculateLeaveDays($row['start_date'], $row['end_date']);
+            ?>
+            <tr>
+                <td><?php echo htmlspecialchars(date("F j, Y", strtotime($row['created_at']))); ?></td>
+                <td><?php echo htmlspecialchars($row['e_id']); ?></td>
+                <td><?php echo htmlspecialchars($row['firstname'] . ' ' . $row['lastname']); ?></td>
+                <td><?php echo htmlspecialchars(date("F j, Y", strtotime($row['start_date']))) . ' - ' . htmlspecialchars(date("F j, Y", strtotime($row['end_date']))); ?></td>
+                <td><?php echo htmlspecialchars($row['leave_type']); ?></td>
+                <td><?php echo htmlspecialchars($leave_days); ?></td>
+                <td><?php echo htmlspecialchars($row['status']); ?></td>
+                <td><?php echo htmlspecialchars($row['supervisor_firstname'] . ' ' . $row['supervisor_lastname']); ?></td>
+            </tr>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="8" class="text-center">No records found</td>
+        </tr>
+    <?php endif; ?>
+    </tbody>
+</table>
+
+<?php
+// Flush the output buffer
+ob_end_flush();
 ?>

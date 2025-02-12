@@ -376,7 +376,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="submitEvaluation()">Save Evaluation</button>
+                    <button type="button" class="btn btn-primary" onclick="submitEvaluation()">Submit</button>
                 </div>
             </div>
         </div>
@@ -454,7 +454,7 @@ $profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../i
         const ampm = hours >= 12 ? 'PM' : 'AM';
 
         hours = hours % 12;
-        hours = hours ? hours : 12; // If hour is 0, set to 12
+        hours = hours ? 12 : 12; // If hour is 0, set to 12
 
         const formattedHours = hours < 10 ? '0' + hours : hours;
         const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;

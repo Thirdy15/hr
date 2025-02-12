@@ -252,7 +252,7 @@ if (isset($_GET['leave_id']) && isset($_GET['status'])) {
                         </a>
                         <div class="collapse" id="collapseSR" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                              <a class="nav-link text-light" href="">Awardee</a>
+                              <a class="nav-link text-light" href="../../employee/supervisor/awardee.php">Awardee</a>
                             </nav>
                         </div>
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">

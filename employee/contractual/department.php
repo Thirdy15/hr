@@ -9,16 +9,26 @@ include '../../db/db_conn.php';
 
 // Fetch user info
 $employeeId = $_SESSION['e_id'];
-$sql = "SELECT firstname, middlename, lastname, email, role, position, pfp FROM employee_register WHERE e_id = ?";
+$sql = "SELECT firstname, middlename, lastname, email, role, position, department, pfp FROM employee_register WHERE e_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $employeeId);
 $stmt->execute();
 $result = $stmt->get_result();
 $employeeInfo = $result->fetch_assoc();
 $stmt->close();
+
+// Fetch employees in the same department
+$department = $employeeInfo['department'];
+$sql = "SELECT e_id, firstname, middlename, lastname, email, role, phone_number, address, pfp FROM employee_register WHERE department = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $department);
+$stmt->execute();
+$employeesResult = $stmt->get_result();
+$employees = $employeesResult->fetch_all(MYSQLI_ASSOC); // Fetch all employees
+$stmt->close();
 $conn->close();
 
-$profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['profile_picture'] : '../../img/defaultpfp.png';
+$profilePicture = !empty($employeeInfo['pfp']) ? $employeeInfo['pfp'] : '../../img/defaultpfp.png';
 
 ?>
 
@@ -87,6 +97,18 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         .sb-sidenav-toggled .fixed-table {
             margin: 0 auto; /* Center the table */
         }
+        .modal-content .table {
+            font-size: 1.25rem; /* Increase table font size */
+        }
+        .modal-content h3, .modal-content h5 {
+            font-size: 2rem; /* Increase header font size */
+        }
+        .modal-content .table th, .modal-content .table td {
+            padding: 1rem; /* Increase padding for table cells */
+        }
+        .star-rating .star {
+            cursor: pointer; /* Change cursor to pointer when hovering over stars */
+        }
     </style>
 </head>
 
@@ -142,7 +164,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                         class="rounded-circle border border-light" width="120" height="120" alt="" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="../../employee/contractual/profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../../employee//profile.php">Profile</a></li>staff
                                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                                     <li><hr class="dropdown-divider" /></li>
@@ -158,8 +180,8 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                 </span>
                             </li>
                         </ul>
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary"> mt-3">Employee Dashboard</div>
-                        <a class="nav-link text-light" href="../../employee/contractual/dashboard.php">
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Employee Dashboard</div>
+                        <a class="nav-link text-light" href="../../employee/staff/dashboard.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>           
@@ -170,11 +192,21 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </a>
                         <div class="collapse" id="collapseTAD" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/contractual/attendance.php">Attendance Scanner</a>
+                                <a class="nav-link text-light" href="../../employee/staff/attendance.php">Attendance Scanner</a>
                                 <a class="nav-link text-light" href="">View Attendance Record</a>
                             </nav>
                         </div>
-                        
+                        <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLM" aria-expanded="false" aria-controls="collapseLM">
+                            <div class="sb-nav-link-icon "><i class="fas fa-calendar-times"></i></div>
+                            Leave Management
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link text-light" href="../../employee/staff/leave_file.php">File Leave</a>
+                                <a class="nav-link text-light" href="../../employee/staff/leave_request.php">Leave Request</a>
+                            </nav>
+                        </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePM" aria-expanded="false" aria-controls="collapsePM">
                             <div class="sb-nav-link-icon"><i class="fas fa-line-chart"></i></div>
                             Performance Management
@@ -182,11 +214,10 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                         </a>
                         <div class="collapse" id="collapsePM" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/contractual/evaluation.php">View Ratings</a>
-                                
+                                <a class="nav-link text-light" href="../../employee/staff/evaluation.php">View Ratings</a>
                             </nav>
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-light" href="../../employee/contractual/department.php">Department Evaluation</a>
+                                <a class="nav-link text-light" href="../../employee/staff/department.php">Department Evaluation</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSR" aria-expanded="false" aria-controls="collapseSR">
@@ -199,7 +230,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                 <a class="nav-link text-light" href="">View Your Rating</a>
                             </nav>
                         </div> 
-                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary"> mt-3">Feedback</div> 
+                        <div class="sb-sidenav-menu-heading text-center text-muted border-top border-1 border-secondary mt-3">Feedback</div> 
                         <a class="nav-link collapsed text-light" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFB" aria-expanded="false" aria-controls="collapseFB">
                             <div class="sb-nav-link-icon"><i class="fas fa-exclamation-circle"></i></div>
                             Report Issue
@@ -220,7 +251,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         <div id="layoutSidenav_content">
             <main class="bg-black">
                 <div class="container-fluid position-relative px-4 fixed-table">
-                    <h1 class="mb-4 text-light text-center">Evaluation Department </h1> <!-- Center the title -->
+                    <h1 class="mb-4 text-light text-center">Department Evaluation</h1> <!-- Center the title -->
 
                     <div class="container" id="calendarContainer" 
                         style="position: fixed; top: 9%; right: 0; z-index: 1050; 
@@ -235,7 +266,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                     <div class="card mb-4 bg-dark text-light">
                         <div class="card-header border-bottom border-1 border-secondary">
                             <i class="fas fa-table me-1"></i>
-                            (deparment employees)
+                            Department Employees
                         </div>
                         <div class="card-body">
                             <table id="datatablesSimple" class="table text-light text-center">
@@ -251,54 +282,30 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="text-center text-light">
-                                        <td>1</td>
-                                        <td>John Doe</td>
-                                        <td>john.doe@example.com</td>
-                                        <td></td>
-                                        <td>123-456-7890</td>
-                                        <td>123 Main St, City, Country</td>
-                                        <td class='d-flex justify-content-around'>
-                                            <button class="btn btn-success btn-sm me-2" onclick="fillUpdateForm(1, 'John', 'Doe', 'john.doe@example.com', 'Manager', '123-456-7890', '123 Main St, City, Country')">Evaluate</button>
-                                            
-                                        </td>
-                                    </tr>
-                                    <tr class="text-center text-light">
-                                        <td>2</td>
-                                        <td>Jane Smith</td>
-                                        <td>jane.smith@example.com</td>
-                                        <td></td>
-                                        <td>987-654-3210</td>
-                                        <td>456 Elm St, City, Country</td>
-                                        <td class='d-flex justify-content-around'>
-                                            <button class="btn btn-success btn-sm me-2" onclick="fillUpdateForm(2, 'Jane', 'Smith', 'jane.smith@example.com', 'Developer', '987-654-3210', '456 Elm St, City, Country')">Evaluate</button>
-                                           
-                                        </td>
-                                    </tr>
-                                    <?php if ($result->num_rows > 0): ?>
-                                        <?php while ($row = $result->fetch_assoc()): ?>
+                                    <?php if (!empty($employees)): ?>
+                                        <?php foreach ($employees as $employee): ?>
                                             <tr class="text-center text-light">
-                                                <td><?php echo htmlspecialchars($row['a_id']); ?></td>
-                                                <td><?php echo htmlspecialchars($row['firstname']. ' ' . $row['lastname']); ?></td>
-                                                <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                                <td><?php echo htmlspecialchars($row['role']); ?></td>
-                                                <td><?php echo htmlspecialchars($row['phone_number']); ?></td>
-                                                <td><?php echo htmlspecialchars($row['address']); ?></td>
+                                                <td><?php echo htmlspecialchars($employee['e_id']); ?></td>
+                                                <td><?php echo htmlspecialchars($employee['firstname'] . ' ' . $employee['middlename'] . ' ' . $employee['lastname']); ?></td>
+                                                <td><?php echo htmlspecialchars($employee['email']); ?></td>
+                                                <td><?php echo htmlspecialchars($employee['role']); ?></td>
+                                                <td><?php echo htmlspecialchars($employee['phone_number']); ?></td>
+                                                <td><?php echo htmlspecialchars($employee['address']); ?></td>
                                                 <td class='d-flex justify-content-around'>
                                                     <button class="btn btn-success btn-sm me-2" 
-                                                            onclick="fillUpdateForm(<?php echo $row['a_id']; ?>, '<?php echo htmlspecialchars($row['firstname']); ?>', '<?php echo htmlspecialchars($row['lastname']); ?>', '<?php echo htmlspecialchars($row['email']); ?>', '<?php echo htmlspecialchars($row['role']); ?>', '<?php echo htmlspecialchars($row['phone_number']); ?>', '<?php echo htmlspecialchars($row['address']); ?>')">Update</button>
-                                                    <button class="btn btn-danger btn-sm" onclick="deleteEmployee(<?php echo $row['a_id']; ?>)">Delete</button>
+                                                        onclick="openModal(<?php echo $employee['e_id']; ?>, '<?php echo htmlspecialchars($employee['firstname']); ?>', '<?php echo htmlspecialchars($employee['lastname']); ?>', '<?php echo htmlspecialchars($employee['email']); ?>', '<?php echo htmlspecialchars($employee['role']); ?>', '<?php echo htmlspecialchars($employee['phone_number']); ?>', '<?php echo htmlspecialchars($employee['address']); ?>', '<?php echo htmlspecialchars($employee['pfp']); ?>')">
+                                                        Evaluate
+                                                    </button>
                                                 </td>
                                             </tr>
-                                        <?php endwhile; ?>
+                                        <?php endforeach; ?>
                                     <?php else: ?>
-                                        <tr><td colspan="8" class="text-center">No records found.</td></tr>
+                                        <tr><td colspan="7" class="text-center">No records found.</td></tr>
                                     <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    
                 </div>
             </main>
             
@@ -336,6 +343,49 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         </div>
     </div>
 
+    <!-- Modal Structure -->
+    <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="employeeModalLabel">Employee Evaluation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="employeeEvaluationForm">
+                        <!-- Employee Info -->
+                        <div class="mb-3 text-center">
+                            <img id="employeeProfilePicture" src="../../img/defaultpfp.png" class="rounded-circle border border-light mb-3" width="120" height="120" alt="Profile Picture" />
+                            <h3 id="employeeName"></h3>
+                            <h5 id="employeeRole"></h5>
+                        </div>
+                        <!-- Evaluation Questions -->
+                        <div id="evaluationQuestions">
+                            <table class="table table-bordered text-light">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Question</th>
+                                        <th>Rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="evaluationQuestionsBody"></tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitEvaluation()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/employee.js"></script>
+
 <script>
     // for calendar only
     let calendar; // Declare calendar variable globally
@@ -344,7 +394,6 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         const calendarContainer = document.getElementById('calendarContainer');
         if (calendarContainer.style.display === 'none' || calendarContainer.style.display === '') {
             calendarContainer.style.display = 'block';
-
             // Initialize the calendar if it hasn't been initialized yet
             if (!calendar) {
                 initializeCalendar();
@@ -405,7 +454,7 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         const ampm = hours >= 12 ? 'PM' : 'AM';
 
         hours = hours % 12;
-        hours = hours ? hours : 12; // If hour is 0, set to 12
+        hours = hours ? 12 : 12; // If hour is 0, set to 12
 
         const formattedHours = hours < 10 ? '0' + hours : hours;
         const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
@@ -438,13 +487,13 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
     }
 
     const features = [
-        { name: "Dashboard", link: "../../employee/contractual/dashboard.php", path: "Employee Dashboard" },
-        { name: "Attendance Scanner", link: "../../employee/contractual/attendance.php", path: "Time and Attendance/Attendance Scanner" },
-        { name: "Leave Request", link: "../../employee/contractual/leave_request.php", path: "Leave Management/Leave Request" },
-        { name: "Evaluation Ratings", link: "../../employee/contractual/evaluation.php", path: "Performance Management/Evaluation Ratings" },
-        { name: "File Leave", link: "../../employee/contractual/leave_file.php", path: "Leave Management/File Leave" },
-        { name: "View Your Rating", link: "../../employee/contractual/social_recognition.php", path: "Social Recognition/View Your Rating" },
-        { name: "Report Issue", link: "../../employee/contractual/report_issue.php", path: "Feedback/Report Issue" }
+        { name: "Dashboard", link: "../../employee/staff/dashboard.php", path: "Employee Dashboard" },
+        { name: "Attendance Scanner", link: "../../employee/staff/attendance.php", path: "Time and Attendance/Attendance Scanner" },
+        { name: "Leave Request", link: "../../employee/staff/leave_request.php", path: "Leave Management/Leave Request" },
+        { name: "Evaluation Ratings", link: "../../employee/staff/evaluation.php", path: "Performance Management/Evaluation Ratings" },
+        { name: "File Leave", link: "../../employee/staff/leave_file.php", path: "Leave Management/File Leave" },
+        { name: "View Your Rating", link: "../../employee/staff/social_recognition.php", path: "Social Recognition/View Your Rating" },
+        { name: "Report Issue", link: "../../employee/staff/report_issue.php", path: "Feedback/Report Issue" }
     ];
 
     // Handle search input change
@@ -490,13 +539,134 @@ $profilePicture = !empty($employeeInfo['profile_picture']) ? $employeeInfo['prof
         document.getElementById('searchResults').innerHTML = '';  // Clear the search results
     });
 
+    function evaluateEmployee(e_id, firstname, lastname, email, role, phone_number, address) {
+        alert(`Evaluating Employee: ${firstname} ${lastname}`);
+        // You can replace this with the code for opening an evaluation form or redirecting to an evaluation page, etc.
+    }
+
+    function openModal(e_id, firstName, lastName, email, role, phoneNumber, address, pfp) {
+        // Set employee info
+        document.getElementById('employeeName').textContent = `Name: ${firstName} ${lastName}`;
+        document.getElementById('employeeRole').textContent = `Role: ${role}`;
+        document.getElementById('employeeProfilePicture').src = pfp ? `../../img/${pfp}` : '../../img/defaultpfp.png';
+
+        // Generate evaluation questions
+        const evaluationQuestions = {
+            "Quality of Work": [
+                "How do you rate the employee's attention to detail?",
+                "How would you evaluate the accuracy of the employee's work?",
+                "Does the employee consistently meet job requirements?"
+            ],
+            "Communication Skills": [
+                "Does the employee communicate clearly?",
+                "Is the employee responsive to feedback?",
+                "How effectively does the employee listen to others?"
+            ],
+            "Teamwork": [
+                "Does the employee collaborate well with others?",
+                "How well does the employee contribute to team success?",
+                "Does the employee support team members when needed?"
+            ],
+            "Punctuality": [
+                "Is the employee consistent in meeting deadlines?",
+                "How often does the employee arrive on time?",
+                "Does the employee respect others' time?"
+            ],
+            "Initiative": [
+                "Does the employee take initiative without being asked?",
+                "How frequently does the employee suggest improvements?",
+                "Does the employee show a proactive attitude?"
+            ]
+        };
+
+        const questionsBody = document.getElementById('evaluationQuestionsBody');
+        questionsBody.innerHTML = ''; // Clear previous questions
+
+        // Generate HTML for questions in table format
+        for (const [category, questions] of Object.entries(evaluationQuestions)) {
+            questions.forEach((question, index) => {
+                questionsBody.innerHTML += `
+                    <tr>
+                        <td style="font-size: 1.25rem;">${category}</td>
+                        <td style="font-size: 1.25rem;">${question}</td>
+                        <td>
+                            <div class="star-rating">
+                                ${[1, 2, 3, 4, 5, 6].map(value => `
+                                    <span class="star" data-value="${value}" data-category="${category.replace(/\s/g, '')}q${index}" style="font-size: 1.5rem;">&#9733;</span>
+                                `).join('')}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Open the modal
+        var myModal = new bootstrap.Modal(document.getElementById('employeeModal'));
+        myModal.show();
+
+        // Add event listeners for star rating
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                const category = this.getAttribute('data-category');
+                document.querySelectorAll(`.star[data-category="${category}"]`).forEach(s => {
+                    s.style.color = s.getAttribute('data-value') <= value ? 'gold' : 'white';
+                });
+            });
+        });
+    }
+
+    function submitEvaluation() {
+        const evaluations = [];
+        const questionsBody = document.getElementById('evaluationQuestionsBody');
+
+        questionsBody.querySelectorAll('.star-rating').forEach(starRating => {
+            const selectedStar = Array.from(starRating.children).find(star => star.style.color === 'gold');
+            if (selectedStar) {
+                evaluations.push({
+                    question: selectedStar.getAttribute('data-category'),
+                    rating: selectedStar.getAttribute('data-value')
+                });
+            }
+        });
+
+        const totalQuestions = questionsBody.querySelectorAll('.star-rating').length;
+
+        if (evaluations.length !== totalQuestions) {
+            alert('Please complete the evaluation before submitting.');
+            return;
+        }
+
+        // Save evaluations to the database
+        fetch('../../employee/save_evaluation.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ evaluations })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Evaluation submitted successfully!');
+                var myModal = bootstrap.Modal.getInstance(document.getElementById('employeeModal'));
+                myModal.hide();
+            } else {
+                alert('Failed to submit evaluation.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the evaluation.');
+        });
+    }
+
+    // Sidebar toggle functionality
+    document.getElementById('sidebarToggle').addEventListener('click', function () {
+        document.body.classList.toggle('sb-sidenav-toggled');
+    });
 </script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'> </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/employee.js"></script>
-
-
 </body>
-
 </html>
 
